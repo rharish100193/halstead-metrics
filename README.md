@@ -104,6 +104,12 @@ const pdf = await renderPdfReport(metrics, "Sample.java");
 
 ## Tests
 
+Unit tests cover classification, rounding, report text, the CLI exit codes, source highlighting, and file reading. Integration tests run the checked-in Java, C, and C++ examples through the library and the CLI, and drive the desktop page: open a file, read the metrics, export HTML and PDF, expand a folder, and use File Open.
+
 ```bash
 npm test
+npm run test:unit
+npm run test:integration
 ```
+
+GitHub Actions runs both on `ubuntu-latest` for every push and pull request. The job does not download Electron, so it stays inside the free GitHub-hosted runner minutes.

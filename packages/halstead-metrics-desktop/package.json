@@ -6,13 +6,16 @@
     "main": "main.js",
     "scripts": {
         "start": "electron .",
-        "test": "node --test test/*.js"
+        "test:unit": "node --test test/unit/*.js",
+        "test:integration": "node --test test/integration/*.js",
+        "test": "npm run test:unit && npm run test:integration"
     },
     "dependencies": {
         "halstead-metrics": "1.0.0"
     },
     "devDependencies": {
-        "electron": "^33.4.11"
+        "electron": "^33.4.11",
+        "jsdom": "^26.1.0"
     },
     "author": {
         "name": "Harish Ramasubramanian",

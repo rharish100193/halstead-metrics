@@ -3,8 +3,8 @@
 const assert = require("assert");
 const test = require("node:test");
 
-const { analyzeSource } = require("../src/analyze");
-const { renderHtmlReport, renderPdfReport, reportBaseName } = require("../src/report");
+const { analyzeSource } = require("../../src/analyze");
+const { renderHtmlReport, renderPdfReport, reportBaseName } = require("../../src/report");
 
 test("names the report from the stem before the first dot", () => {
 	assert.strictEqual(reportBaseName("/tmp/Sample.java"), "Sample");
@@ -33,12 +33,35 @@ test("html report escapes operator names", () => {
 	assert.ok(!html.includes("<td><</td>"));
 });
 
+/**
+ * pdfkit writes page text as hex character codes. Decode those so assertions
+ * can look for the words a reader sees.
+ * @param {Buffer} pdf
+ * @returns {string}
+ */
+function pdfText(pdf) {
+	const raw = pdf.toString("latin1");
+	let decoded = "";
+	const hex = /<([0-9A-Fa-f]+)>/g;
+	let match = hex.exec(raw);
+	while (match) {
+		for (let i = 0; i < match[1].length; i += 2) {
+			decoded += String.fromCharCode(parseInt(match[1].slice(i, i + 2), 16));
+		}
+		match = hex.exec(raw);
+	}
+	return decoded;
+}
+
 test("pdf report is a document that names the source file", async () => {
 	const metrics = analyzeSource("int x=1;", "java");
 	const pdf = await renderPdfReport(metrics, "Sample.java");
 	assert.ok(Buffer.isBuffer(pdf));
-	assert.ok(pdf.subarray(0, 5).toString() === "%PDF-");
-	const text = pdf.toString("latin1");
+	assert.strictEqual(pdf.subarray(0, 5).toString(), "%PDF-");
+	const text = pdfText(pdf);
 	assert.match(text, /Sample\.java/);
 	assert.match(text, /Halstead Metrics Analysis Report/);
+	assert.match(text, /11\.61/);
+	assert.match(text, /Operators:/);
+	assert.match(text, /Operands:/);
 });

@@ -6,7 +6,7 @@ const os = require("os");
 const path = require("path");
 const test = require("node:test");
 
-const { main } = require("../src/cli");
+const { main } = require("../../src/cli");
 
 test("cli writes JSON for a source file and rejects other paths", () => {
 	const dir = fs.mkdtempSync(path.join(os.tmpdir(), "halstead-"));

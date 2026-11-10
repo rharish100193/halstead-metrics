@@ -3,9 +3,10 @@
 const assert = require("assert");
 const test = require("node:test");
 
-const { analyzeSource, reportSource } = require("../src/analyze");
-const { tokenize } = require("../src/tokenizer");
-const { formatRounded, roundTo2Decimals } = require("../src/metrics");
+const { analyzeSource, reportSource } = require("../../src/analyze");
+const { keywordsForExtension, languageForExtension } = require("../../src/keywords");
+const { tokenize } = require("../../src/tokenizer");
+const { formatRounded, roundTo2Decimals } = require("../../src/metrics");
 
 test("rounds half-even to two decimals", () => {
 	assert.strictEqual(roundTo2Decimals(1.225), 1.22);
@@ -15,6 +16,21 @@ test("rounds half-even to two decimals", () => {
 	assert.strictEqual(formatRounded(5), "5.0");
 	assert.strictEqual(formatRounded(11.609), "11.61");
 	assert.strictEqual(formatRounded(Number.NaN), "");
+});
+
+test("maps extensions onto a language and a keyword list", () => {
+	assert.strictEqual(languageForExtension("JAVA"), "java");
+	assert.strictEqual(languageForExtension("c++"), "cpp");
+	assert.strictEqual(languageForExtension("cc"), "cpp");
+	assert.strictEqual(languageForExtension("txt"), null);
+	assert.ok(keywordsForExtension("java").has("class"));
+	assert.ok(keywordsForExtension("cpp").has("class"));
+	assert.strictEqual(keywordsForExtension("cc"), null);
+	assert.strictEqual(keywordsForExtension("txt"), null);
+});
+
+test("rejects an unsupported extension before tokenizing", () => {
+	assert.throws(() => analyzeSource("int x;", "txt"), /Unsupported extension: txt/);
 });
 
 test("classifies a Java statement the way the Java tool does", () => {

@@ -7,7 +7,9 @@
         "packages/*"
     ],
     "scripts": {
-        "test": "npm test -w halstead-metrics && npm test -w halstead-metrics-cli && npm test -w halstead-metrics-desktop",
+        "test:unit": "npm run test:unit -w halstead-metrics && npm run test:unit -w halstead-metrics-cli && npm run test:unit -w halstead-metrics-desktop",
+        "test:integration": "npm run test:integration -w halstead-metrics && npm run test:integration -w halstead-metrics-cli && npm run test:integration -w halstead-metrics-desktop",
+        "test": "npm run test:unit && npm run test:integration",
         "start": "npm start -w halstead-metrics-desktop",
         "cli": "node packages/halstead-metrics-cli/index.js"
     },

@@ -8,7 +8,9 @@
     "main": "src/cli.js",
     "scripts": {
         "start": "node index.js",
-        "test": "node --test test/*.js"
+        "test:unit": "node --test test/unit/*.js",
+        "test:integration": "node --test test/integration/*.js",
+        "test": "npm run test:unit && npm run test:integration"
     },
     "engines": {
         "node": ">=18"
