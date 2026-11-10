@@ -1,16 +1,36 @@
-# halstead-metrics-cli
+# halstead-metrics
 
-Node.js port of the [Halstead Metrics Tool](https://sourceforge.net/projects/halsteadmetricstool) for Java, C, and C++. It tokenizes a source file, classifies operators and operands the same way the Java analyzer does, and prints Halstead metrics as JSON.
+Monorepo for Halstead software-science metrics on Java, C, and C++. It follows the [Halstead Metrics Tool](https://sourceforge.net/projects/halsteadmetricstool): the same operator and operand classification, the same formulas, a desktop browser for a single source file, and detailed HTML and PDF reports.
 
-## Usage
+## Packages
+
+| Package | Role |
+| --- | --- |
+| `packages/halstead-metrics` | Core library. Tokenizes source, classifies operators and operands, and renders the HTML and PDF reports. |
+| `packages/halstead-metrics-cli` | `halstead <path>` prints the JSON report to stdout. |
+| `packages/halstead-metrics-desktop` | Desktop application. Browse files, read the metrics, and open an HTML or PDF report. |
+
+## Desktop application
 
 ```bash
-node index.js examples/Sample.java
-node index.js examples/hello.c
-node index.js examples/hello.cpp
+npm install
+npm start
 ```
 
-With the package installed, the `halstead` command does the same thing:
+The window matches the Java tool. A file tree is on the left. **Metrics Value** shows the file name and the calculated measures. **Source code** shows the file with keywords, strings, comments, and numbers highlighted. **View HTML Report** and **View PDF Report** write `Name.html` or `Name.pdf` next to the source file (the stem is everything before the first dot) and open it.
+
+**File → Open File...** jumps the tree to a `.java`, `.c`, `.cc`, `.cpp`, or `.c++` file. **File → Exit** quits.
+
+The HTML report is the detailed report: file name, operator counts, operand counts, and the metric values. The PDF report has the same sections in a printable layout. Counts are the classified totals. Metric values are rounded to two decimal places with half-even rounding, and whole numbers are shown with one decimal place (`5.0`), matching the Java `DecimalFormat` output.
+
+## Command line
+
+```bash
+npm run cli -- examples/Sample.java
+node packages/halstead-metrics-cli/index.js examples/hello.c
+```
+
+With `packages/halstead-metrics-cli` installed, the `halstead` command does the same thing:
 
 ```bash
 halstead <path>
@@ -19,8 +39,6 @@ halstead <path>
 Supported extensions are `.java`, `.c`, `.cc`, `.cpp`, and `.c++`.
 
 No arguments, `-h`, `--help`, and `-help` print usage and exit `1`. An unreadable path exits `2`. Any other extension exits `3`.
-
-## Output
 
 Stdout is one JSON object:
 
@@ -46,7 +64,7 @@ Stdout is one JSON object:
 }
 ```
 
-Counts inside `_Operands` and `_Operators` are strings, matching the original CLI. Metric fields are rounded to two decimal places with half-even rounding. `filename` is the path you passed in.
+Counts inside `_Operands` and `_Operators` are strings, matching the original CLI. `filename` is the path you passed in.
 
 | Field | Formula |
 | --- | --- |
@@ -74,11 +92,15 @@ The classifier follows `KeywordAnalyzer`, `SymbolAnalyzer`, `BracesAnalyzer`, an
 ## API
 
 ```javascript
-const { analyzeSource, reportSource } = require("halstead-metrics-cli");
+const { analyzeSource, reportSource, renderHtmlReport, renderPdfReport } = require("halstead-metrics");
 
 const metrics = analyzeSource("int x = 1;", "java");
 const report = reportSource("int x = 1;", "java", "Sample.java");
+const html = renderHtmlReport(metrics, "Sample.java");
+const pdf = await renderPdfReport(metrics, "Sample.java");
 ```
+
+`analyzeSource` takes the source text and the extension without a dot (`java`, `c`, `cc`, `cpp`, or `c++`). `renderHtmlReport` returns a string. `renderPdfReport` returns a `Buffer`.
 
 ## Tests
 

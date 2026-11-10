@@ -3,8 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { SUPPORTED_EXTENSIONS } = require("./keywords");
-const { reportSource } = require("./analyze");
+const { SUPPORTED_EXTENSIONS, reportSource } = require("halstead-metrics");
 
 const USAGE = "Usage:\n"
 	+ "\tTo use in CLI mode: halstead <path name>\n"

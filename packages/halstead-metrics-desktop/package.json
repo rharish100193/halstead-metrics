@@ -1,0 +1,23 @@
+{
+    "name": "halstead-metrics-desktop",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Desktop Halstead metrics browser with HTML and PDF reports",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "test": "node --test test/*.js"
+    },
+    "dependencies": {
+        "halstead-metrics": "1.0.0"
+    },
+    "devDependencies": {
+        "electron": "^33.4.11"
+    },
+    "author": {
+        "name": "Harish Ramasubramanian",
+        "email": "rharish100193@gmail.com",
+        "url": "https://github.com/rharish100193"
+    },
+    "license": "MIT"
+}

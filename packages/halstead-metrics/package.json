@@ -1,0 +1,24 @@
+{
+    "name": "halstead-metrics",
+    "version": "1.0.0",
+    "description": "Halstead metrics for Java, C, and C++ source",
+    "main": "src/index.js",
+    "files": [
+        "src"
+    ],
+    "scripts": {
+        "test": "node --test test/*.js"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "dependencies": {
+        "pdfkit": "^0.17.2"
+    },
+    "author": {
+        "name": "Harish Ramasubramanian",
+        "email": "rharish100193@gmail.com",
+        "url": "https://github.com/rharish100193"
+    },
+    "license": "MIT"
+}

@@ -1,21 +1,20 @@
 "use strict";
 
 const assert = require("assert");
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
 const test = require("node:test");
 
 const { analyzeSource, reportSource } = require("../src/analyze");
 const { tokenize } = require("../src/tokenizer");
-const { roundTo2Decimals } = require("../src/metrics");
-const { main } = require("../src/cli");
+const { formatRounded, roundTo2Decimals } = require("../src/metrics");
 
 test("rounds half-even to two decimals", () => {
 	assert.strictEqual(roundTo2Decimals(1.225), 1.22);
 	assert.strictEqual(roundTo2Decimals(1.235), 1.24);
 	assert.strictEqual(roundTo2Decimals(2), 2);
 	assert.strictEqual(roundTo2Decimals(Number.POSITIVE_INFINITY), null);
+	assert.strictEqual(formatRounded(5), "5.0");
+	assert.strictEqual(formatRounded(11.609), "11.61");
+	assert.strictEqual(formatRounded(Number.NaN), "");
 });
 
 test("classifies a Java statement the way the Java tool does", () => {
@@ -86,30 +85,4 @@ test(".cc uses the C++ lexer but does not treat C++ keywords as operators", () =
 	assert.ok(withKeywords.operators.has("class"));
 	assert.ok(!withoutKeywords.operators.has("class"));
 	assert.ok(withoutKeywords.operands.has("class"));
-});
-
-test("cli writes JSON for a source file and rejects other paths", () => {
-	const dir = fs.mkdtempSync(path.join(os.tmpdir(), "halstead-"));
-	const file = path.join(dir, "A.java");
-	fs.writeFileSync(file, "int x=1;\n");
-	const lines = [];
-	const code = main([file], { log: (line) => lines.push(line), error: () => {} });
-	assert.strictEqual(code, 0);
-	const parsed = JSON.parse(lines[0]);
-	assert.strictEqual(parsed.filename, file);
-	assert.strictEqual(parsed.Halstead.n1, 3);
-
-	const help = [];
-	assert.strictEqual(main(["--help"], { log: (line) => help.push(line) }), 1);
-	assert.match(help[0], /halstead <path name>/);
-
-	const missing = [];
-	assert.strictEqual(main(["no-such-file.java"], { log: (line) => missing.push(line) }), 2);
-	assert.match(missing[0], /Cannot read file:/);
-
-	const text = path.join(dir, "notes.txt");
-	fs.writeFileSync(text, "hello");
-	const bad = [];
-	assert.strictEqual(main([text], { log: (line) => bad.push(line) }), 3);
-	assert.match(bad[0], /Check the path you inserted:/);
 });

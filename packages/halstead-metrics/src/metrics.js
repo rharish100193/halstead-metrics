@@ -183,6 +183,22 @@ function roundTo2Decimals(value) {
 }
 
 /**
+ * Java `"" + RoundTo2Decimals(value)`: whole numbers keep one decimal place.
+ * @param {number} value
+ * @returns {string}
+ */
+function formatRounded(value) {
+	const rounded = roundTo2Decimals(value);
+	if (rounded === null) {
+		return "";
+	}
+	if (Number.isInteger(rounded)) {
+		return rounded.toFixed(1);
+	}
+	return String(rounded);
+}
+
+/**
  * JSON document printed by cli.NewMain.
  * @param {ReturnType<typeof evaluate>} metrics
  * @param {string} filename
@@ -225,6 +241,7 @@ module.exports = {
 	classify,
 	evaluate,
 	roundTo2Decimals,
+	formatRounded,
 	toReport,
 	SYMBOLS,
 };

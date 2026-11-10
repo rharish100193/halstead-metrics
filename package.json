@@ -1,14 +1,15 @@
 {
-    "name": "halstead-metrics-cli",
+    "name": "halstead-metrics-workspace",
+    "private": true,
     "version": "1.0.0",
-    "description": "Halstead metrics for Java, C, and C++ source files",
-    "bin": {
-        "halstead": "index.js"
-    },
-    "main": "src/index.js",
+    "description": "Halstead metrics library, command-line tool, and desktop application",
+    "workspaces": [
+        "packages/*"
+    ],
     "scripts": {
-        "start": "node index.js",
-        "test": "node --test test/analyze.test.js"
+        "test": "npm test -w halstead-metrics && npm test -w halstead-metrics-cli && npm test -w halstead-metrics-desktop",
+        "start": "npm start -w halstead-metrics-desktop",
+        "cli": "node packages/halstead-metrics-cli/index.js"
     },
     "engines": {
         "node": ">=18"

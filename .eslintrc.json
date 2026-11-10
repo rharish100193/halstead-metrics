@@ -24,5 +24,16 @@
             "error",
             "always"
         ]
-    }
+    },
+    "overrides": [
+        {
+            "files": [
+                "packages/halstead-metrics-desktop/renderer.js"
+            ],
+            "env": {
+                "browser": true,
+                "node": false
+            }
+        }
+    ]
 }

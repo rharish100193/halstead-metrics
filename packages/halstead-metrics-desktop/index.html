@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Halstead Metrics</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<div class="app">
+		<aside class="browser">
+			<div class="browser-bar">
+				<button id="up" type="button">Up</button>
+				<div id="cwd" class="cwd" title=""></div>
+			</div>
+			<div id="tree" class="tree" role="tree"></div>
+		</aside>
+		<div class="workspace">
+			<section class="panel metrics">
+				<h2>Metrics Value</h2>
+				<div class="fields">
+					<label for="name">Name</label>
+					<input id="name" type="text" readonly>
+					<label for="program-length">Program Length</label>
+					<input id="program-length" type="text" readonly>
+					<label for="program-vocabulary">Program Vocabulary</label>
+					<input id="program-vocabulary" type="text" readonly>
+					<label for="estimated-length">Estimated Length</label>
+					<input id="estimated-length" type="text" readonly>
+					<label for="purity-ratio">Purity Ratio</label>
+					<input id="purity-ratio" type="text" readonly>
+					<label for="volume">Volume</label>
+					<input id="volume" type="text" readonly>
+					<label for="difficulty">Difficulty</label>
+					<input id="difficulty" type="text" readonly>
+					<label for="program-effort">Program Effort</label>
+					<input id="program-effort" type="text" readonly>
+					<label for="programming-time">Programming Time</label>
+					<input id="programming-time" type="text" readonly>
+				</div>
+				<div class="actions">
+					<button id="export-html" type="button" disabled>View HTML Report</button>
+					<button id="export-pdf" type="button" disabled>View PDF Report</button>
+				</div>
+				<p id="status" class="status" role="status"></p>
+			</section>
+			<section class="panel source">
+				<h2>Source code</h2>
+				<div id="code" class="code"></div>
+			</section>
+		</div>
+	</div>
+	<script src="renderer.js"></script>
+</body>
+</html>

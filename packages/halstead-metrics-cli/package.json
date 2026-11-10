@@ -1,0 +1,25 @@
+{
+    "name": "halstead-metrics-cli",
+    "version": "1.0.0",
+    "description": "Command-line Halstead metrics for Java, C, and C++ source files",
+    "bin": {
+        "halstead": "index.js"
+    },
+    "main": "src/cli.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "node --test test/*.js"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "dependencies": {
+        "halstead-metrics": "1.0.0"
+    },
+    "author": {
+        "name": "Harish Ramasubramanian",
+        "email": "rharish100193@gmail.com",
+        "url": "https://github.com/rharish100193"
+    },
+    "license": "MIT"
+}
