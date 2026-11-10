@@ -105,6 +105,8 @@ dist
 dist
 .vscode
 **/lib/*
+!packages/halstead-metrics-desktop/lib/
+!packages/halstead-metrics-desktop/lib/**
 *.html
 !packages/halstead-metrics-desktop/index.html
 .docz
