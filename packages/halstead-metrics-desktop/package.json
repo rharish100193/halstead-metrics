@@ -14,7 +14,7 @@
         "halstead-metrics": "1.0.0"
     },
     "devDependencies": {
-        "electron": "^33.4.11",
+        "electron": "^45.2.3",
         "jsdom": "^26.1.0"
     },
     "author": {
