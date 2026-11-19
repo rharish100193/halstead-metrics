@@ -32,4 +32,13 @@ test("cli writes JSON for a source file and rejects other paths", () => {
 	const bad = [];
 	assert.strictEqual(main([text], { log: (line) => bad.push(line) }), 3);
 	assert.match(bad[0], /Check the path you inserted:/);
+
+	const python = path.join(dir, "hello.py");
+	fs.writeFileSync(python, "def f():\n    return x\n");
+	const pyLines = [];
+	assert.strictEqual(main([python], { log: (line) => pyLines.push(line), error: () => {} }), 0);
+	const pyReport = JSON.parse(pyLines[0]);
+	assert.strictEqual(pyReport.Halstead._Operators.def, "1");
+	assert.strictEqual(pyReport.Halstead._Operators.return, "1");
+	assert.strictEqual(pyReport.Halstead._Operands.x, "1");
 });

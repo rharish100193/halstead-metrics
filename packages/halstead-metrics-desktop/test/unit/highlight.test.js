@@ -24,6 +24,12 @@ test("keeps a block comment marked across lines and colors preprocessor lines", 
 	assert.match(directive[1], /<span class="kw">int<\/span>/);
 });
 
+test("highlights a Python keyword and its hash comment", () => {
+	const lines = highlightLines("def f():  # note\n", "py");
+	assert.match(lines[0], /<span class="kw">def<\/span>/);
+	assert.match(lines[0], /<span class="cm"># note<\/span>/);
+});
+
 test("colors string literals instead of the words inside them", () => {
 	const lines = highlightLines("String s = \"class\";", "java");
 	assert.match(lines[0], /<span class="st">"class"<\/span>/);

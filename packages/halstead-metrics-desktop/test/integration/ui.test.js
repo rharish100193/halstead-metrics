@@ -118,7 +118,11 @@ test("opening a source file fills the metrics panel and writes both reports", as
 	try {
 		assert.strictEqual(document.getElementById("cwd").textContent, dirs.project);
 		assert.strictEqual(document.getElementById("export-html").disabled, true);
+		assert.strictEqual(document.querySelector(".tree-label").textContent, "Files");
 		assert.ok(rowNamed(document, "Sample.java").classList.contains("kind-source"));
+		assert.strictEqual(rowNamed(document, "Sample.java").querySelector(".ext").textContent, "java");
+		assert.ok(rowNamed(document, "nested").classList.contains("kind-dir"));
+		assert.ok(rowNamed(document, "notes.txt").classList.contains("kind-file"));
 		assert.ok(!rowNamed(document, "notes.txt").classList.contains("kind-source"));
 
 		click(rowNamed(document, "Sample.java"));
@@ -137,8 +141,11 @@ test("opening a source file fills the metrics panel and writes both reports", as
 		await until(() => document.getElementById("status").textContent.startsWith("Wrote "));
 		const htmlStatus = document.getElementById("status").textContent;
 		assert.match(htmlStatus, /Sample\.html$/);
-		assert.match(fs.readFileSync(path.join(dirs.project, "Sample.html"), "utf8"), /Halstead Metrics Detailed Report/);
-		assert.match(fs.readFileSync(path.join(dirs.project, "Sample.html"), "utf8"), /Volume<\/th><td>11\.61<\/td>/);
+		const htmlReport = fs.readFileSync(path.join(dirs.project, "Sample.html"), "utf8");
+		assert.match(htmlReport, /Halstead Metrics Detailed Report/);
+		assert.match(htmlReport, /Volume<\/th><td>11\.61<\/td>/);
+		assert.match(htmlReport, /Reading this file/);
+		assert.match(htmlReport, /class="callout"/);
 
 		click(document.getElementById("export-pdf"));
 		await until(() => document.getElementById("status").textContent.includes("Sample.pdf"));
@@ -167,6 +174,7 @@ test("the file tree expands folders and Up moves to the parent directory", async
 		click(rowNamed(document, "nested"));
 		await until(() => rowNamed(document, "Inner.java"));
 		assert.strictEqual(rowNamed(document, "nested").querySelector(".twist").textContent, "\u25be");
+		assert.ok(rowNamed(document, "nested").classList.contains("open"));
 
 		click(rowNamed(document, "Inner.java"));
 		await until(() => document.getElementById("name").value === "Inner.java");

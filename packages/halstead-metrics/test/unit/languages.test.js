@@ -47,6 +47,38 @@ test("keeps a Python string together and skips a shell comment", () => {
 	assert.ok(!shell.operands.has("nope"));
 });
 
+test("scores TypeScript, C#, and Kotlin with their keywords", () => {
+	const typescript = analyzeSource("interface Box { readonly n: number }\n", "ts");
+	assert.ok(typescript.operators.has("interface"));
+	assert.ok(typescript.operators.has("readonly"));
+	assert.ok(typescript.operands.has("Box"));
+
+	const csharp = analyzeSource("namespace App { public class Box {} }\n", "cs");
+	assert.ok(csharp.operators.has("namespace"));
+	assert.ok(csharp.operators.has("public"));
+	assert.ok(csharp.operators.has("class"));
+
+	const kotlin = analyzeSource("fun main() { val n = 1 }\n", "kt");
+	assert.ok(kotlin.operators.has("fun"));
+	assert.ok(kotlin.operators.has("val"));
+	assert.ok(kotlin.operands.has("n"));
+});
+
+test("counts logical operators in Java and treats headers as C or C++", () => {
+	const java = analyzeSource("if (a && b) return;\n", "java");
+	assert.ok(java.operators.has("&&"));
+	assert.ok(java.operators.has("if"));
+	assert.ok(java.operators.has("return"));
+	assert.ok(!java.operands.has("&&"));
+
+	const header = analyzeSource("int x;\n", "h");
+	assert.ok(header.operators.has("int"));
+
+	const hpp = analyzeSource("class T {};\n", "hpp");
+	assert.ok(hpp.operators.has("class"));
+	assert.ok(!hpp.operands.has("class"));
+});
+
 test("rejects extensions that are not programming languages", () => {
 	assert.ok(SUPPORTED_EXTENSIONS.has("py"));
 	assert.ok(SUPPORTED_EXTENSIONS.has("ts"));

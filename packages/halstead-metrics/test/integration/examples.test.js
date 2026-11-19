@@ -82,12 +82,23 @@ test("example sources produce the same metrics in JSON, HTML, and PDF", async ()
 		assert.strictEqual(roundTo2Decimals(metrics.programmingTime), expected.time, name);
 		assert.ok(metrics.operators.has(expected.operator), name);
 		assert.ok(!metrics.operands.has("include"), name + " keeps preprocessor lines out");
+		if (name === "hello.c") {
+			assert.ok(metrics.operators.has(","), name);
+		}
+		if (name === "hello.cpp") {
+			assert.ok(metrics.operators.has("::"), name);
+			assert.ok(metrics.operators.has("<<"), name);
+		}
 
 		const html = renderHtmlReport(metrics, name);
 		assert.match(html, new RegExp("File Name: </h3>" + name.replace(".", "\\.")));
 		assert.match(html, new RegExp("Program Length</th><td>" + expected.length.toFixed(1)));
 		assert.match(html, new RegExp("Volume</th><td>" + expected.volume));
 		assert.match(html, new RegExp("<td>" + expected.operator + "</td>"));
+		assert.match(html, /About Halstead metrics/);
+		assert.match(html, /Reading this file/);
+		assert.match(html, /class="callout"/);
+		assert.match(html, /class="stats"/);
 
 		const pdf = await renderPdfReport(metrics, filePath);
 		const text = pdfText(pdf);
@@ -95,6 +106,10 @@ test("example sources produce the same metrics in JSON, HTML, and PDF", async ()
 		assert.match(text, new RegExp(name.replace(".", "\\.")));
 		assert.match(text, new RegExp(String(expected.volume)));
 		assert.match(text, new RegExp(String(expected.effort)));
+		assert.match(text, /Halstead Metrics Detailed Report/);
+		assert.match(text, /READING THIS FILE/);
+		assert.match(text, /FORMULAS/);
+		assert.match(text, /HOW TO USE THIS REPORT/);
 		assert.ok(source.length > 0);
 	}
 });

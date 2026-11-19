@@ -28,6 +28,11 @@ test("html report lists operators, operands, and rounded values", () => {
 	assert.match(html, /Reading this file/);
 	assert.match(html, /Purity ratio is 1\.35/);
 	assert.match(html, /How to use this report/);
+	assert.match(html, /class="stats"/);
+	assert.match(html, /class="callout"/);
+	assert.match(html, /<th>Measure<\/th><th>Formula<\/th>/);
+	assert.match(html, /effort \/ 18 seconds/);
+	assert.match(html, />Length<\/span><strong>5\.0<\/strong>/);
 });
 
 test("html report escapes operator names", () => {
@@ -70,4 +75,9 @@ test("pdf report is a document that names the source file", async () => {
 	assert.match(text, /OPERANDS/);
 	assert.match(text, /READING THIS FILE/);
 	assert.match(text, /HOW TO USE THIS REPORT/);
+	assert.match(text, /FILE NAME/);
+	assert.match(text, /SUMMARY/);
+	assert.match(text, /FORMULAS/);
+	assert.match(text, /MEASURED VALUES/);
+	assert.match(text, /Purity ratio is 1\.35/);
 });
