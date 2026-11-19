@@ -1,6 +1,6 @@
 "use strict";
 
-const SOURCE_EXTENSIONS = new Set(["java", "c", "cc", "cpp", "c++"]);
+let SOURCE_EXTENSIONS = new Set();
 
 const tree = document.getElementById("tree");
 const cwd = document.getElementById("cwd");
@@ -89,8 +89,8 @@ async function openPath(filePath) {
 	if (!file.supported) {
 		currentFile = null;
 		clearMetrics();
-		showCode([]);
-		setStatus("Select a .java, .c, .cc, .cpp, or .c++ file.");
+		showCode(file.lines);
+		setStatus("Halstead metrics are not available for this file type.");
 		return;
 	}
 	currentFile = filePath;
@@ -118,6 +118,7 @@ async function toggleDirectory(item, row) {
 	if (item.dataset.loaded === "1") {
 		child.hidden = !child.hidden;
 		row.querySelector(".twist").textContent = child.hidden ? "\u25b8" : "\u25be";
+		row.classList.toggle("open", !child.hidden);
 		return;
 	}
 	item.dataset.loaded = "1";
@@ -137,6 +138,7 @@ async function toggleDirectory(item, row) {
 	}
 	child.hidden = false;
 	row.querySelector(".twist").textContent = "\u25be";
+	row.classList.add("open");
 }
 
 function buildList(entries) {
@@ -147,17 +149,30 @@ function buildList(entries) {
 		const row = document.createElement("div");
 		row.className = "row";
 		row.dataset.path = entry.path;
+		row.classList.add(entry.isDirectory ? "kind-dir" : "kind-file");
 		const twist = document.createElement("span");
 		twist.className = "twist";
 		twist.textContent = entry.isDirectory ? "\u25b8" : "";
+		const glyph = document.createElement("span");
+		glyph.className = "glyph";
+		glyph.setAttribute("aria-hidden", "true");
 		const label = document.createElement("span");
 		label.className = "label";
 		label.textContent = entry.name;
-		if (!entry.isDirectory && SOURCE_EXTENSIONS.has(extensionOf(entry.name))) {
+		const extension = extensionOf(entry.name);
+		let badge = null;
+		if (!entry.isDirectory && SOURCE_EXTENSIONS.has(extension)) {
 			row.classList.add("kind-source");
+			badge = document.createElement("span");
+			badge.className = "ext";
+			badge.textContent = extension;
 		}
 		row.appendChild(twist);
+		row.appendChild(glyph);
 		row.appendChild(label);
+		if (badge) {
+			row.appendChild(badge);
+		}
 		row.addEventListener("click", () => {
 			markSelected(row);
 			if (entry.isDirectory) {
@@ -246,4 +261,9 @@ window.halstead.onOpenFile(async () => {
 	await showDirectory(parent, picked);
 });
 
-window.halstead.home().then((home) => showDirectory(home));
+const ready = window.halstead.extensions
+	? window.halstead.extensions().then((list) => {
+		SOURCE_EXTENSIONS = new Set(list);
+	})
+	: Promise.resolve();
+ready.then(() => window.halstead.home()).then((home) => showDirectory(home));

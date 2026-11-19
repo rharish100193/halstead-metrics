@@ -81,16 +81,7 @@ function metricFields(metrics) {
 function readSource(filePath) {
 	const name = path.basename(filePath);
 	const extension = extensionOf(filePath);
-	if (!SUPPORTED_EXTENSIONS.has(extension)) {
-		return {
-			name: name,
-			extension: extension,
-			supported: false,
-			source: "",
-			lines: [],
-			fields: null,
-		};
-	}
+	const supported = SUPPORTED_EXTENSIONS.has(extension);
 	let source;
 	try {
 		source = fs.readFileSync(filePath, "utf8");
@@ -98,11 +89,22 @@ function readSource(filePath) {
 		return {
 			name: name,
 			extension: extension,
-			supported: true,
+			supported: supported,
 			source: "",
 			lines: [],
 			fields: null,
 			error: "Cannot read file.",
+		};
+	}
+	const lines = highlightLines(source, extension);
+	if (!supported) {
+		return {
+			name: name,
+			extension: extension,
+			supported: false,
+			source: source,
+			lines: lines,
+			fields: null,
 		};
 	}
 	try {
@@ -112,7 +114,7 @@ function readSource(filePath) {
 			extension: extension,
 			supported: true,
 			source: source,
-			lines: highlightLines(source, extension),
+			lines: lines,
 			fields: metricFields(metrics),
 		};
 	} catch (err) {
@@ -121,7 +123,7 @@ function readSource(filePath) {
 			extension: extension,
 			supported: true,
 			source: source,
-			lines: highlightLines(source, extension),
+			lines: lines,
 			fields: null,
 			error: "Could not calculate metrics.",
 		};
@@ -129,7 +131,7 @@ function readSource(filePath) {
 }
 
 /**
- * Write the HTML or PDF report beside the source file, using the same stem as the Java tool.
+ * Write the HTML or PDF report beside the source file. The stem is everything before the first dot.
  * @param {string} filePath
  * @param {"html"|"pdf"} kind
  * @returns {Promise<string>} output path
@@ -137,7 +139,7 @@ function readSource(filePath) {
 async function exportReport(filePath, kind) {
 	const extension = extensionOf(filePath);
 	if (!SUPPORTED_EXTENSIONS.has(extension)) {
-		throw new Error("Select a Java, C, or C++ source file.");
+		throw new Error("Select a supported source file.");
 	}
 	const source = fs.readFileSync(filePath, "utf8");
 	const metrics = analyzeSource(source, extension);

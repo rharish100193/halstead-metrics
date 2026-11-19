@@ -24,6 +24,10 @@ test("html report lists operators, operands, and rounded values", () => {
 	assert.match(html, /Volume<\/th><td>11\.61<\/td>/);
 	assert.match(html, /Programming Time<\/th><td>0\.97<\/td>/);
 	assert.match(html, /Copyright &copy; Harish Ramasubramanian/);
+	assert.match(html, /About Halstead metrics/);
+	assert.match(html, /Reading this file/);
+	assert.match(html, /Purity ratio is 1\.35/);
+	assert.match(html, /How to use this report/);
 });
 
 test("html report escapes operator names", () => {
@@ -60,8 +64,10 @@ test("pdf report is a document that names the source file", async () => {
 	assert.strictEqual(pdf.subarray(0, 5).toString(), "%PDF-");
 	const text = pdfText(pdf);
 	assert.match(text, /Sample\.java/);
-	assert.match(text, /Halstead Metrics Analysis Report/);
+	assert.match(text, /Halstead Metrics Detailed Report/);
 	assert.match(text, /11\.61/);
-	assert.match(text, /Operators:/);
-	assert.match(text, /Operands:/);
+	assert.match(text, /OPERATORS/);
+	assert.match(text, /OPERANDS/);
+	assert.match(text, /READING THIS FILE/);
+	assert.match(text, /HOW TO USE THIS REPORT/);
 });

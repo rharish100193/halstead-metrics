@@ -35,6 +35,14 @@ test("reads supported source into fields and refuses other paths", async () => {
 	const notes = readSource(path.join(dir, "notes.txt"));
 	assert.strictEqual(notes.supported, false);
 	assert.strictEqual(notes.fields, null);
+	assert.deepStrictEqual(notes.lines, ["hello"]);
+
+	const script = path.join(dir, "cli.js");
+	fs.writeFileSync(script, "const n = 1;\n");
+	const javascript = readSource(script);
+	assert.strictEqual(javascript.supported, true);
+	assert.strictEqual(javascript.fields.programLength, "5.0");
+	assert.match(javascript.lines[0], /<span class="kw">const<\/span>/);
 
 	const missing = readSource(path.join(dir, "Missing.java"));
 	assert.strictEqual(missing.supported, true);
@@ -43,6 +51,6 @@ test("reads supported source into fields and refuses other paths", async () => {
 
 	await assert.rejects(
 		() => exportReport(path.join(dir, "notes.txt"), "html"),
-		/Select a Java, C, or C\+\+ source file/
+		/Select a supported source file/
 	);
 });

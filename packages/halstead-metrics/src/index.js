@@ -9,6 +9,7 @@ const {
 	keywordsForExtension,
 	languageForExtension,
 } = require("./keywords");
+const { syntaxForExtension } = require("./languages");
 const { formatRounded, toReport, roundTo2Decimals } = require("./metrics");
 const { renderHtmlReport, renderPdfReport, reportBaseName } = require("./report");
 
@@ -25,6 +26,7 @@ module.exports = {
 	SUPPORTED_EXTENSIONS,
 	languageForExtension,
 	keywordsForExtension,
+	syntaxForExtension,
 	JAVA_KEYWORDS,
 	C_KEYWORDS,
 	CPP_KEYWORDS,

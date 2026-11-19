@@ -8,46 +8,83 @@
 <body>
 	<div class="app">
 		<aside class="browser">
+			<div class="browser-head">
+				<div class="brand">
+					<span class="mark" aria-hidden="true">H</span>
+					<div>
+						<div class="brand-name">Halstead</div>
+						<div class="brand-sub">Metrics</div>
+					</div>
+				</div>
+			</div>
 			<div class="browser-bar">
-				<button id="up" type="button">Up</button>
+				<button id="up" class="icon-button" type="button" aria-label="Up" title="Parent folder">
+					<span class="up-mark" aria-hidden="true"></span>
+				</button>
 				<div id="cwd" class="cwd" title=""></div>
 			</div>
+			<div class="tree-label">Files</div>
 			<div id="tree" class="tree" role="tree"></div>
 		</aside>
-		<div class="workspace">
+		<main class="workspace">
 			<section class="panel metrics">
-				<h2>Metrics Value</h2>
-				<div class="fields">
-					<label for="name">Name</label>
-					<input id="name" type="text" readonly>
-					<label for="program-length">Program Length</label>
-					<input id="program-length" type="text" readonly>
-					<label for="program-vocabulary">Program Vocabulary</label>
-					<input id="program-vocabulary" type="text" readonly>
-					<label for="estimated-length">Estimated Length</label>
-					<input id="estimated-length" type="text" readonly>
-					<label for="purity-ratio">Purity Ratio</label>
-					<input id="purity-ratio" type="text" readonly>
-					<label for="volume">Volume</label>
-					<input id="volume" type="text" readonly>
-					<label for="difficulty">Difficulty</label>
-					<input id="difficulty" type="text" readonly>
-					<label for="program-effort">Program Effort</label>
-					<input id="program-effort" type="text" readonly>
-					<label for="programming-time">Programming Time</label>
-					<input id="programming-time" type="text" readonly>
+				<div class="panel-head">
+					<div>
+						<h2>Measures</h2>
+						<p class="lede">Operators, operands, and the derived Halstead values for the open file.</p>
+					</div>
+					<div class="actions">
+						<button id="export-html" class="button" type="button" disabled>HTML report</button>
+						<button id="export-pdf" class="button button-primary" type="button" disabled>PDF report</button>
+					</div>
 				</div>
-				<div class="actions">
-					<button id="export-html" type="button" disabled>View HTML Report</button>
-					<button id="export-pdf" type="button" disabled>View PDF Report</button>
+				<div class="fields">
+					<div class="stat stat-name">
+						<label for="name">File</label>
+						<input id="name" type="text" readonly placeholder="No file open">
+					</div>
+					<div class="stat">
+						<label for="program-length">Program length</label>
+						<input id="program-length" type="text" readonly>
+					</div>
+					<div class="stat">
+						<label for="program-vocabulary">Vocabulary</label>
+						<input id="program-vocabulary" type="text" readonly>
+					</div>
+					<div class="stat">
+						<label for="volume">Volume</label>
+						<input id="volume" type="text" readonly>
+					</div>
+					<div class="stat">
+						<label for="difficulty">Difficulty</label>
+						<input id="difficulty" type="text" readonly>
+					</div>
+					<div class="stat">
+						<label for="estimated-length">Estimated length</label>
+						<input id="estimated-length" type="text" readonly>
+					</div>
+					<div class="stat">
+						<label for="purity-ratio">Purity ratio</label>
+						<input id="purity-ratio" type="text" readonly>
+					</div>
+					<div class="stat">
+						<label for="program-effort">Effort</label>
+						<input id="program-effort" type="text" readonly>
+					</div>
+					<div class="stat">
+						<label for="programming-time">Time</label>
+						<input id="programming-time" type="text" readonly>
+					</div>
 				</div>
 				<p id="status" class="status" role="status"></p>
 			</section>
 			<section class="panel source">
-				<h2>Source code</h2>
+				<div class="panel-head">
+					<h2>Source</h2>
+				</div>
 				<div id="code" class="code"></div>
 			</section>
-		</div>
+		</main>
 	</div>
 	<script src="renderer.js"></script>
 </body>

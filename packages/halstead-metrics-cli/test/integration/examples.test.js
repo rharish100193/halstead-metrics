@@ -11,8 +11,8 @@ const examples = path.resolve(__dirname, "../../../../examples");
 test("cli reports the checked-in Java, C, and C++ examples", () => {
 	const expected = {
 		"Sample.java": { n1: 12, Length: 34, Volume: 165.17 },
-		"hello.c": { n1: 8, Length: 24, Volume: 103.73 },
-		"hello.cpp": { n1: 7, Length: 24, Volume: 105.42 },
+		"hello.c": { n1: 9, Length: 24, Volume: 103.73 },
+		"hello.cpp": { n1: 9, Length: 26, Volume: 114.2 },
 	};
 	const names = Object.keys(expected);
 	for (let i = 0; i < names.length; i += 1) {

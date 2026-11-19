@@ -2,8 +2,8 @@
 
 const fs = require("fs");
 
-const { keywordsForExtension, languageForExtension } = require("./keywords");
-const { tokenize } = require("./tokenizer");
+const { getModernLanguage } = require("./languages");
+const { tokenizeGeneric } = require("./genericLexer");
 const { classify, toReport } = require("./metrics");
 
 /**
@@ -11,13 +11,12 @@ const { classify, toReport } = require("./metrics");
  * @param {string} extension extension without the leading dot
  */
 function analyzeSource(source, extension) {
-	const language = languageForExtension(extension);
+	const language = getModernLanguage(extension);
 	if (!language) {
 		throw new Error("Unsupported extension: " + extension);
 	}
-	const tokens = tokenize(source, language);
-	const metrics = classify(tokens, keywordsForExtension(extension));
-	return metrics;
+	const tokens = tokenizeGeneric(source, language);
+	return classify(tokens, language.keywords, language.operators);
 }
 
 /**

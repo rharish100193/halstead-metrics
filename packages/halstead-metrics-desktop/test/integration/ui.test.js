@@ -8,6 +8,7 @@ const test = require("node:test");
 const vm = require("vm");
 const { JSDOM } = require("jsdom");
 
+const { SUPPORTED_EXTENSIONS } = require("halstead-metrics");
 const { exportReport, listDirectory, readSource } = require("../../lib/files");
 
 const desktopRoot = path.resolve(__dirname, "../..");
@@ -62,6 +63,7 @@ async function boot(homeDir) {
 	let picked = null;
 	window.halstead = {
 		home: async () => homeDir,
+		extensions: async () => Array.from(SUPPORTED_EXTENSIONS),
 		parent: async (dirPath) => {
 			const parent = path.dirname(dirPath);
 			return parent === dirPath ? dirPath : parent;
@@ -147,11 +149,11 @@ test("opening a source file fills the metrics panel and writes both reports", as
 		assert.strictEqual(document.getElementById("export-html").disabled, false);
 
 		click(rowNamed(document, "notes.txt"));
-		await until(() => document.getElementById("status").textContent.includes("Select a .java"));
+		await until(() => document.getElementById("status").textContent.includes("not available"));
 		assert.strictEqual(document.getElementById("name").value, "notes.txt");
 		assert.strictEqual(document.getElementById("program-length").value, "");
 		assert.strictEqual(document.getElementById("export-pdf").disabled, true);
-		assert.match(document.getElementById("code").textContent, /No source to show/);
+		assert.match(document.getElementById("code").textContent, /hello/);
 	} finally {
 		app.close();
 	}

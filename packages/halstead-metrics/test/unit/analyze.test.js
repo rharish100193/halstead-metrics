@@ -4,8 +4,9 @@ const assert = require("assert");
 const test = require("node:test");
 
 const { analyzeSource, reportSource } = require("../../src/analyze");
+const { tokenizeGeneric } = require("../../src/genericLexer");
 const { keywordsForExtension, languageForExtension } = require("../../src/keywords");
-const { tokenize } = require("../../src/tokenizer");
+const { getModernLanguage } = require("../../src/languages");
 const { formatRounded, roundTo2Decimals } = require("../../src/metrics");
 
 test("rounds half-even to two decimals", () => {
@@ -25,7 +26,8 @@ test("maps extensions onto a language and a keyword list", () => {
 	assert.strictEqual(languageForExtension("txt"), null);
 	assert.ok(keywordsForExtension("java").has("class"));
 	assert.ok(keywordsForExtension("cpp").has("class"));
-	assert.strictEqual(keywordsForExtension("cc"), null);
+	assert.ok(keywordsForExtension("cc").has("class"));
+	assert.ok(keywordsForExtension("js").has("const"));
 	assert.strictEqual(keywordsForExtension("txt"), null);
 });
 
@@ -33,7 +35,7 @@ test("rejects an unsupported extension before tokenizing", () => {
 	assert.throws(() => analyzeSource("int x;", "txt"), /Unsupported extension: txt/);
 });
 
-test("classifies a Java statement the way the Java tool does", () => {
+test("classifies a Java statement from keywords and operators", () => {
 	const report = reportSource("int x=1;", "java", "Sample.java");
 	const halstead = report.Halstead;
 	assert.strictEqual(report.filename, "Sample.java");
@@ -75,18 +77,18 @@ test("counts a string once and keeps parentheses as operands", () => {
 });
 
 test("keeps ++ as one operator and ignores comments", () => {
-	const tokens = tokenize("x++; // comment\n/* block */ y--;", "java");
+	const tokens = tokenizeGeneric("x++; // comment\n/* block */ y--;", getModernLanguage("java"));
 	assert.deepStrictEqual(tokens, ["x", "++", ";", "y", "--", ";", "<EOF>"]);
 });
 
 test("does not split floating point literals on the dot operator", () => {
-	const tokens = tokenize("n = 1.5 + .25;", "c");
+	const tokens = tokenizeGeneric("n = 1.5 + .25;", getModernLanguage("c"));
 	assert.deepStrictEqual(tokens, ["n", "=", "1.5", "+", ".25", ";", "<EOF>"]);
 });
 
 test("skips C preprocessor lines and still lexes the function", () => {
 	const source = "#include <stdio.h>\nint main() { return 0; }\n";
-	const tokens = tokenize(source, "c");
+	const tokens = tokenizeGeneric(source, getModernLanguage("c"));
 	assert.ok(!tokens.some((token) => token.includes("include") || token.includes("stdio")));
 	const metrics = analyzeSource(source, "c");
 	assert.ok(metrics.operators.has("int"));
@@ -95,10 +97,10 @@ test("skips C preprocessor lines and still lexes the function", () => {
 	assert.ok(metrics.operators.has("( )"));
 });
 
-test(".cc uses the C++ lexer but does not treat C++ keywords as operators", () => {
-	const withKeywords = analyzeSource("class T {};", "cpp");
-	const withoutKeywords = analyzeSource("class T {};", "cc");
-	assert.ok(withKeywords.operators.has("class"));
-	assert.ok(!withoutKeywords.operators.has("class"));
-	assert.ok(withoutKeywords.operands.has("class"));
+test("treats C++ keywords as operators for .cc and .c++", () => {
+	const cpp = analyzeSource("class T {};", "cpp");
+	const cc = analyzeSource("class T {};", "cc");
+	assert.ok(cpp.operators.has("class"));
+	assert.ok(cc.operators.has("class"));
+	assert.ok(!cc.operands.has("class"));
 });

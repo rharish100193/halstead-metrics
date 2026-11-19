@@ -4,6 +4,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("halstead", {
 	home: () => ipcRenderer.invoke("home"),
+	extensions: () => ipcRenderer.invoke("extensions"),
 	parent: (dirPath) => ipcRenderer.invoke("parent", dirPath),
 	listDir: (dirPath) => ipcRenderer.invoke("list-dir", dirPath),
 	openFile: (filePath) => ipcRenderer.invoke("open-file", filePath),

@@ -1,9 +1,6 @@
 "use strict";
 
-const SYMBOLS = [
-	"+", "++", "-", "--", "*", ".", ";", "/", "%", "!", ">", "<", ">=", "<=",
-	"==", "=", ":", "~",
-];
+const { OPERATORS } = require("./languages");
 
 const BRACE_PAIRS = [
 	["{", "}"],
@@ -56,25 +53,27 @@ class Counter {
 }
 
 /**
- * Same pipeline as Initiator: keywords, symbols, brace pairs, then leftovers.
+ * Keywords, then the shared operator list, then balanced brace pairs, then leftovers.
  * @param {string[]} tokens
  * @param {Set<string>|null} keywords
+ * @param {string[]|null} [symbols]
  */
-function classify(tokens, keywords) {
+function classify(tokens, keywords, symbols) {
 	const operators = new Counter();
 	const operands = new Counter();
+	const symbolList = symbols || OPERATORS;
 
 	for (let i = 0; i < tokens.length; i += 1) {
 		const token = tokens[i];
 		if (keywords && keywords.has(token)) {
 			operators.add(token);
-		} else if (token.charAt(0) === "\"") {
+		} else if (isStringToken(token)) {
 			operands.add(token);
 		}
 	}
 
-	for (let s = 0; s < SYMBOLS.length; s += 1) {
-		const symbol = SYMBOLS[s];
+	for (let s = 0; s < symbolList.length; s += 1) {
+		const symbol = symbolList[s];
 		let count = 0;
 		for (let i = 0; i < tokens.length; i += 1) {
 			if (tokens[i] === symbol) {
@@ -112,6 +111,16 @@ function classify(tokens, keywords) {
 	}
 
 	return evaluate(operators, operands);
+}
+
+/**
+ * Quoted literals are operands.
+ * @param {string} token
+ * @returns {boolean}
+ */
+function isStringToken(token) {
+	const ch = token.charAt(0);
+	return ch === "\"" || ch === "'" || ch === "`";
 }
 
 /**
@@ -159,8 +168,8 @@ function evaluate(operators, operands) {
 }
 
 /**
- * DecimalFormat("###.##") with HALF_EVEN, then parsed back to a number.
- * Non-finite values become null, matching json-simple.
+ * Half-even rounding to two decimal places, then parsed back to a number.
+ * Non-finite values become null.
  * @param {number} value
  * @returns {number|null}
  */
@@ -183,7 +192,7 @@ function roundTo2Decimals(value) {
 }
 
 /**
- * Java `"" + RoundTo2Decimals(value)`: whole numbers keep one decimal place.
+ * Whole numbers keep one decimal place (`5.0`).
  * @param {number} value
  * @returns {string}
  */
@@ -243,5 +252,4 @@ module.exports = {
 	roundTo2Decimals,
 	formatRounded,
 	toReport,
-	SYMBOLS,
 };

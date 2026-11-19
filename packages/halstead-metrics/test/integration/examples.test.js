@@ -6,6 +6,7 @@ const path = require("path");
 const test = require("node:test");
 
 const { analyzeFile } = require("../../src/analyze");
+const { roundTo2Decimals } = require("../../src/metrics");
 const { renderHtmlReport, renderPdfReport } = require("../../src/report");
 
 const examples = path.resolve(__dirname, "../../../../examples");
@@ -42,24 +43,24 @@ const EXPECTED = {
 	},
 	"hello.c": {
 		extension: "c",
-		n1: 8,
-		n2: 12,
+		n1: 9,
+		n2: 11,
 		length: 24,
 		vocabulary: 20,
 		volume: 103.73,
-		effort: 414.91,
-		time: 23.05,
+		effort: 466.77,
+		time: 25.93,
 		operator: "return",
 	},
 	"hello.cpp": {
 		extension: "cpp",
-		n1: 7,
-		n2: 14,
-		length: 24,
+		n1: 9,
+		n2: 12,
+		length: 26,
 		vocabulary: 21,
-		volume: 105.42,
-		effort: 368.95,
-		time: 20.5,
+		volume: 114.2,
+		effort: 513.9,
+		time: 28.55,
 		operator: "return",
 	},
 };
@@ -76,6 +77,9 @@ test("example sources produce the same metrics in JSON, HTML, and PDF", async ()
 		assert.strictEqual(metrics.n2, expected.n2, name);
 		assert.strictEqual(metrics.length, expected.length, name);
 		assert.strictEqual(metrics.vocabulary, expected.vocabulary, name);
+		assert.strictEqual(roundTo2Decimals(metrics.volume), expected.volume, name);
+		assert.strictEqual(roundTo2Decimals(metrics.effort), expected.effort, name);
+		assert.strictEqual(roundTo2Decimals(metrics.programmingTime), expected.time, name);
 		assert.ok(metrics.operators.has(expected.operator), name);
 		assert.ok(!metrics.operands.has("include"), name + " keeps preprocessor lines out");
 

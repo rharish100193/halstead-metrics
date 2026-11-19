@@ -6,6 +6,7 @@ const fs = require("fs");
 
 const { app, BrowserWindow, Menu, dialog, ipcMain, shell } = require("electron");
 
+const { SUPPORTED_EXTENSIONS } = require("halstead-metrics");
 const { listDirectory, readSource, exportReport } = require("./lib/files");
 
 let mainWindow = null;
@@ -17,7 +18,7 @@ function createWindow() {
 		minWidth: 800,
 		minHeight: 560,
 		title: "Halstead Metrics",
-		backgroundColor: "#ececec",
+		backgroundColor: "#f4f4f5",
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 			contextIsolation: true,
@@ -58,6 +59,8 @@ function buildMenu() {
 }
 
 ipcMain.handle("home", () => os.homedir());
+
+ipcMain.handle("extensions", () => Array.from(SUPPORTED_EXTENSIONS));
 
 ipcMain.handle("parent", (event, dirPath) => {
 	const parent = path.dirname(dirPath);
@@ -102,7 +105,7 @@ ipcMain.handle("pick-file", async () => {
 		title: "Open source file",
 		properties: ["openFile"],
 		filters: [
-			{ name: "Java, C, C++", extensions: ["java", "c", "cc", "cpp", "c++"] },
+			{ name: "Source", extensions: Array.from(SUPPORTED_EXTENSIONS) },
 		],
 	});
 	if (result.canceled || result.filePaths.length === 0) {
