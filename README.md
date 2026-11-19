@@ -1,6 +1,6 @@
 # halstead-metrics
 
-Monorepo for Halstead software-science metrics. Every supported language uses the same formulas and the same classification: keywords and operators are operators, identifiers and literals are operands, and comments are skipped. The desktop app browses a source file and writes HTML and PDF reports.
+Halstead software-science metrics for the programming languages in wide use today. Every language uses the same classification and the same formulas. A desktop app browses a source file, shows the measures, and writes an HTML or PDF report that explains what those measures mean.
 
 ## Packages
 
@@ -17,11 +17,34 @@ npm install
 npm start
 ```
 
-A file tree is on the left. The metrics panel shows the file name and the calculated measures. **Source** shows the file with keywords, strings, comments, and numbers highlighted. **HTML report** and **PDF report** write `Name.html` or `Name.pdf` next to the source file (the stem is everything before the first dot) and open it.
+The window has two panes.
 
-**File → Open File...** jumps the tree to a supported source file. **File → Exit** quits.
+- **Files**, on the left, is the folder you are browsing. **Up** moves to the parent directory. Folders and files have icons, supported source files show an extension chip, and the current path truncates instead of covering the list. **File → Open File...** jumps the tree to a supported source file. **File → Exit** quits.
+- **Measures** shows the file name and the calculated values: length, vocabulary, volume, difficulty, estimated length, purity ratio, effort, and time. **Source** shows the file with keywords, strings, comments, and numbers highlighted. **HTML report** and **PDF report** write `Name.html` or `Name.pdf` next to the source file and open it. The stem is everything before the first dot.
 
-The HTML report names the file, summarizes the measures, explains Halstead metrics and how to read this file, lists the formulas, then the operators, operands, and measured values. The PDF report has the same sections in a printable layout. Counts are the classified totals. Metric values are rounded to two decimal places with half-even rounding, and whole numbers are shown with one decimal place (`5.0`).
+A file that is not a supported language still opens in the source pane. Its metrics stay empty.
+
+## Reports
+
+The HTML and PDF reports use the same layout: a white card, the Halstead mark, a file panel, summary cards, and bordered tables. Both include these sections:
+
+| Section | What it tells you |
+| --- | --- |
+| Summary | Length, vocabulary, volume, difficulty, effort, and time for this file. |
+| About Halstead metrics | What operators and operands are, and what the measures do not describe. |
+| Reading this file | How to read this file's purity ratio, volume, difficulty, and programming time. |
+| Formulas | Each measure and the expression that produces it. |
+| Operators and operands | Every counted token and how many times it appears. |
+| Measured values | The full set of rounded results. |
+| How to use this report | This is one file. A larger number is not a pass or fail. |
+
+Counts are the classified totals. Metric values use half-even rounding to two decimal places. Whole numbers are shown with one decimal place (`5.0`). Programming time is effort divided by 18 and is a comparison figure, not a clock of how long the file took to write.
+
+## Languages
+
+Supported languages are Java (`.java`), C (`.c`, `.h`), C++ (`.cpp`, `.cc`, `.cxx`, `.c++`, `.hpp`, `.hh`, `.hxx`), C# (`.cs`), JavaScript (`.js`, `.mjs`, `.cjs`, `.jsx`), TypeScript (`.ts`, `.tsx`, `.mts`, `.cts`), Python (`.py`, `.pyw`, `.pyi`), Go (`.go`), Rust (`.rs`), PHP (`.php`), Ruby (`.rb`), Kotlin (`.kt`, `.kts`), Swift (`.swift`), Scala (`.scala`, `.sc`), Dart (`.dart`), SQL (`.sql`), shell (`.sh`, `.bash`, `.zsh`), PowerShell (`.ps1`, `.psm1`), Perl (`.pl`, `.pm`), Lua (`.lua`), R (`.r`), Haskell (`.hs`), Elixir (`.ex`, `.exs`), Erlang (`.erl`, `.hrl`), Objective-C (`.m`, `.mm`), Groovy (`.groovy`, `.gvy`), Zig (`.zig`), Julia (`.jl`), Visual Basic (`.vb`), F# (`.fs`, `.fsx`), Clojure (`.clj`, `.cljs`, `.cljc`), Fortran (`.f90`, `.f95`, `.f03`, `.f08`), Solidity (`.sol`), OCaml (`.ml`, `.mli`), Pascal (`.pas`, `.dpr`, `.pp`), Ada (`.adb`, `.ads`), COBOL (`.cbl`, `.cob`, `.cobol`), Lisp (`.lisp`, `.lsp`, `.cl`), Scheme (`.scm`, `.ss`), Awk (`.awk`), Nim (`.nim`), D (`.d`), Elm (`.elm`), and GraphQL (`.graphql`, `.gql`).
+
+Markup and data files (HTML, CSS, JSON, YAML, XML, Markdown) are not scored. `.m` is Objective-C. `.pl` is Perl. `.h` is C.
 
 ## Command line
 
@@ -35,10 +58,6 @@ With `packages/halstead-metrics-cli` installed, the `halstead` command does the 
 ```bash
 halstead <path>
 ```
-
-Supported languages are Java (`.java`), C (`.c`, `.h`), C++ (`.cpp`, `.cc`, `.cxx`, `.c++`, `.hpp`, `.hh`, `.hxx`), C# (`.cs`), JavaScript (`.js`, `.mjs`, `.cjs`, `.jsx`), TypeScript (`.ts`, `.tsx`, `.mts`, `.cts`), Python (`.py`), Go (`.go`), Rust (`.rs`), PHP (`.php`), Ruby (`.rb`), Kotlin (`.kt`, `.kts`), Swift (`.swift`), Scala (`.scala`), Dart (`.dart`), SQL (`.sql`), shell (`.sh`, `.bash`, `.zsh`), PowerShell (`.ps1`), Perl (`.pl`, `.pm`), Lua (`.lua`), R (`.r`), Haskell (`.hs`), Elixir (`.ex`, `.exs`), Erlang (`.erl`), Objective-C (`.m`, `.mm`), Groovy (`.groovy`), Zig (`.zig`), Julia (`.jl`), Visual Basic (`.vb`), F# (`.fs`), Clojure (`.clj`, `.cljs`), Fortran (`.f90` and later), Solidity (`.sol`), OCaml (`.ml`), Pascal (`.pas`), Ada (`.adb`, `.ads`), COBOL (`.cbl`, `.cob`), Lisp (`.lisp`), Scheme (`.scm`), Awk (`.awk`), Nim (`.nim`), D (`.d`), Elm (`.elm`), and GraphQL (`.graphql`, `.gql`).
-
-Markup and data files (HTML, CSS, JSON, YAML, XML, Markdown) are not scored. `.m` is Objective-C. `.pl` is Perl. `.h` is C.
 
 No arguments, `-h`, `--help`, and `-help` print usage and exit `1`. An unreadable path exits `2`. Any other extension exits `3`.
 
