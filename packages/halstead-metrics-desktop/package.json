@@ -1,6 +1,6 @@
 {
     "name": "halstead-metrics-desktop",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "private": true,
     "description": "Desktop Halstead metrics browser for all major programming languages, with HTML and PDF reports",
     "main": "main.js",
@@ -57,7 +57,7 @@
         }
     },
     "dependencies": {
-        "halstead-metrics": "1.0.0"
+        "halstead-metrics": "1.0.1"
     },
     "devDependencies": {
         "electron": "^45.2.3",

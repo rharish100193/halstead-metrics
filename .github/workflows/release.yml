@@ -5,17 +5,12 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Release version, for example 1.2.0"
-        required: true
-        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.workflow }}-${{ github.ref }}-${{ inputs.version }}
+  group: release-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -54,8 +49,6 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
       - name: Resolve release version
-        env:
-          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
         run: bash scripts/resolve-release-version.sh
       - name: Enable GitHub trusted publishing
         run: |
@@ -81,8 +74,6 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
       - name: Resolve release version
-        env:
-          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
         run: bash scripts/resolve-release-version.sh
       - name: Enable GitHub trusted publishing
         run: |
@@ -125,8 +116,6 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
       - name: Resolve release version
-        env:
-          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
         run: bash scripts/resolve-release-version.sh
       - name: Wait for the published CLI package
         run: bash scripts/wait-for-npm.sh "$CLI_PACKAGE@$VERSION" "$CORE_PACKAGE@$VERSION"
@@ -160,8 +149,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Resolve release version
-        env:
-          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
         run: bash scripts/resolve-release-version.sh
       - uses: actions/download-artifact@v4
         with:
