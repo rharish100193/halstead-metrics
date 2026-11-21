@@ -10,8 +10,14 @@ if (!stage) {
 }
 
 async function install() {
-	for (let attempt = 1; attempt <= 18; attempt += 1) {
-		const result = spawnSync("npm", ["install", "--no-package-lock", "--no-audit", "--no-fund"], {
+	for (let attempt = 1; attempt <= 12; attempt += 1) {
+		spawnSync("npm", ["cache", "clean", "--force"], {
+			cwd: stage,
+			stdio: "inherit",
+			shell: process.platform === "win32",
+			env: process.env,
+		});
+		const result = spawnSync("npm", ["install", "--prefer-online", "--no-package-lock", "--no-audit", "--no-fund"], {
 			cwd: stage,
 			stdio: "inherit",
 			shell: process.platform === "win32",
@@ -20,8 +26,8 @@ async function install() {
 		if (result.status === 0) {
 			return;
 		}
-		console.error(`desktop npm install failed (${attempt}/18)`);
-		if (attempt === 18) {
+		console.error(`desktop npm install failed (${attempt}/12)`);
+		if (attempt === 12) {
 			process.exit(result.status || 1);
 		}
 		await setTimeout(10000);
