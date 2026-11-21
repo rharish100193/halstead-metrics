@@ -1,7 +1,7 @@
 {
     "name": "halstead-metrics-core",
     "version": "1.0.0",
-    "description": "Command-line Halstead metrics for Java, C, and C++ source files",
+    "description": "Command-line Halstead metrics for all major programming languages",
     "bin": {
         "halstead": "index.js"
     },

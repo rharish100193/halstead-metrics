@@ -1,15 +1,15 @@
 # halstead-metrics
 
-Halstead software-science metrics for the programming languages in wide use today. Every language uses the same classification and the same formulas. A desktop app browses a source file, shows the measures, and writes an HTML or PDF report that explains what those measures mean.
+Halstead software-science metrics for all major programming languages. Every language uses the same classification and the same formulas. A desktop app and a terminal app browse a source file, show the measures, and write an HTML or PDF report that explains what those measures mean.
 
 ## Packages
 
 | Package | Role |
 | --- | --- |
-| `packages/halstead-metrics` | Core library. Tokenizes source, classifies operators and operands, and renders the HTML and PDF reports. |
-| `packages/halstead-metrics-core` | `halstead <path>` prints the JSON report to stdout. |
-| `packages/halstead-metrics-desktop` | Desktop application. Browse files, read the metrics, and open an HTML or PDF report. |
-| `packages/halstead-metrics-tui` | Terminal application. The same browser, measures, source view, and HTML or PDF reports, drawn with Ink. |
+| `packages/halstead-metrics` | Library for all major programming languages. Tokenizes source, classifies operators and operands, and renders the HTML and PDF reports. |
+| `packages/halstead-metrics-core` | Command-line tool. `halstead <path>` prints the JSON report to stdout. |
+| `packages/halstead-metrics-desktop` | Desktop application for all major programming languages. Browse files, read the metrics, and open an HTML or PDF report. |
+| `packages/halstead-metrics-tui` | Terminal application for all major programming languages. The same browser, measures, source view, and HTML or PDF reports, drawn with Ink. |
 
 ## Desktop application
 

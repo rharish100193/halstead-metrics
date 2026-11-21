@@ -2,7 +2,7 @@
     "name": "halstead-metrics-workspace",
     "private": true,
     "version": "1.0.0",
-    "description": "Halstead metrics library, command-line tool, desktop application, and terminal UI",
+    "description": "Halstead metrics for all major programming languages, with a command-line tool, desktop application, and terminal UI",
     "workspaces": [
         "packages/*"
     ],

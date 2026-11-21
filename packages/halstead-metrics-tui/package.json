@@ -2,7 +2,7 @@
     "name": "halstead-metrics-tui",
     "version": "1.0.0",
     "private": true,
-    "description": "Terminal Halstead metrics browser with HTML and PDF reports",
+    "description": "Terminal Halstead metrics browser for all major programming languages, with HTML and PDF reports",
     "bin": {
         "halstead-tui": "index.mjs"
     },
