@@ -98,6 +98,7 @@ jobs:
         run: |
           npm install -g npm@11
           npm config delete "//registry.npmjs.org/:_authToken" || true
+          npm config delete always-auth || true
           npm --version
       - name: Publish halstead-metrics
         working-directory: packages/halstead-metrics
@@ -126,6 +127,7 @@ jobs:
         run: |
           npm install -g npm@11
           npm config delete "//registry.npmjs.org/:_authToken" || true
+          npm config delete always-auth || true
           npm --version
       - name: Wait for the published core package
         run: bash scripts/wait-for-npm.sh "$CORE_PACKAGE@$VERSION"
