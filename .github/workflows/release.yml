@@ -57,10 +57,13 @@ jobs:
         env:
           RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
         run: bash scripts/resolve-release-version.sh
+      - name: Enable GitHub trusted publishing
+        run: |
+          npm install -g npm@11
+          npm config delete "//registry.npmjs.org/:_authToken" || true
+          npm --version
       - name: Publish halstead-metrics
         working-directory: packages/halstead-metrics
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: bash "${GITHUB_WORKSPACE}/scripts/publish-npm-package.sh"
 
   publish-cli:
@@ -81,6 +84,11 @@ jobs:
         env:
           RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
         run: bash scripts/resolve-release-version.sh
+      - name: Enable GitHub trusted publishing
+        run: |
+          npm install -g npm@11
+          npm config delete "//registry.npmjs.org/:_authToken" || true
+          npm --version
       - name: Wait for the published core package
         run: bash scripts/wait-for-npm.sh "$CORE_PACKAGE@$VERSION"
       - name: Point the CLI at the published core package
@@ -88,8 +96,6 @@ jobs:
         run: npm pkg set "dependencies.halstead-metrics=${VERSION}"
       - name: Publish halstead-metrics-core
         working-directory: packages/halstead-metrics-core
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: bash "${GITHUB_WORKSPACE}/scripts/publish-npm-package.sh"
       - name: Run the published CLI
         run: bash scripts/verify-published-cli.sh
