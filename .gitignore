@@ -107,6 +107,8 @@ dist
 **/lib/*
 !packages/halstead-metrics-desktop/lib/
 !packages/halstead-metrics-desktop/lib/**
+!packages/halstead-metrics-tui/lib/
+!packages/halstead-metrics-tui/lib/**
 *.html
 !packages/halstead-metrics-desktop/index.html
 .docz
