@@ -5,6 +5,16 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      bump:
+        description: Version increment
+        required: true
+        type: choice
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: read
@@ -32,11 +42,43 @@ jobs:
       - name: Integration tests
         run: npm run test:integration
       - name: Release script tests
-        run: node --test scripts/stage-desktop-release.test.js
+        run: node --test scripts/*.test.js
+
+  bump:
+    name: Bump package version
+    needs: test
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Bump the committed version
+        run: node scripts/bump-release-version.js ${{ inputs.bump }}
+      - name: Commit and push the version
+        id: commit
+        run: |
+          if git diff --quiet; then
+            echo "sha=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json packages/halstead-metrics/package.json packages/halstead-metrics-core/package.json packages/halstead-metrics-desktop/package.json packages/halstead-metrics-tui/package.json
+          git commit -m "chore: Release ${VERSION}"
+          git push origin HEAD
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
   publish-core:
     name: Publish core npm package
-    needs: test
+    needs: [test, bump]
+    if: always() && needs.test.result == 'success' && (needs.bump.result == 'success' || needs.bump.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -44,6 +86,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump.outputs.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -61,7 +105,8 @@ jobs:
 
   publish-cli:
     name: Publish CLI npm package
-    needs: publish-core
+    needs: [publish-core, bump]
+    if: always() && needs.publish-core.result == 'success' && (needs.bump.result == 'success' || needs.bump.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -69,6 +114,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump.outputs.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -93,7 +140,8 @@ jobs:
 
   desktop:
     name: Desktop (${{ matrix.platform }})
-    needs: publish-cli
+    needs: [publish-cli, bump]
+    if: always() && needs.publish-cli.result == 'success' && (needs.bump.result == 'success' || needs.bump.result == 'skipped')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:
@@ -111,6 +159,8 @@ jobs:
             args: --win --x64
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump.outputs.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -141,13 +191,16 @@ jobs:
 
   github-release:
     name: Publish GitHub release
-    needs: desktop
+    needs: [desktop, bump]
+    if: always() && needs.desktop.result == 'success' && (needs.bump.result == 'success' || needs.bump.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: write
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump.outputs.sha || github.sha }}
       - name: Resolve release version
         run: bash scripts/resolve-release-version.sh
       - uses: actions/download-artifact@v4
