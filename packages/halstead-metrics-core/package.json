@@ -1,11 +1,15 @@
 {
-    "name": "halstead-metrics-cli",
+    "name": "halstead-metrics-core",
     "version": "1.0.0",
     "description": "Command-line Halstead metrics for Java, C, and C++ source files",
     "bin": {
         "halstead": "index.js"
     },
     "main": "src/cli.js",
+    "files": [
+        "index.js",
+        "src"
+    ],
     "scripts": {
         "start": "node index.js",
         "test:unit": "node --test test/unit/*.js",
@@ -23,5 +27,13 @@
         "email": "rharish100193@gmail.com",
         "url": "https://github.com/rharish100193"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/rharish100193/halstead-metrics.git",
+        "directory": "packages/halstead-metrics-core"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
 }

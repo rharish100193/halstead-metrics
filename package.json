@@ -2,16 +2,17 @@
     "name": "halstead-metrics-workspace",
     "private": true,
     "version": "1.0.0",
-    "description": "Halstead metrics library, command-line tool, and desktop application",
+    "description": "Halstead metrics library, command-line tool, desktop application, and terminal UI",
     "workspaces": [
         "packages/*"
     ],
     "scripts": {
-        "test:unit": "npm run test:unit -w halstead-metrics && npm run test:unit -w halstead-metrics-cli && npm run test:unit -w halstead-metrics-desktop",
-        "test:integration": "npm run test:integration -w halstead-metrics && npm run test:integration -w halstead-metrics-cli && npm run test:integration -w halstead-metrics-desktop",
+        "test:unit": "npm run test:unit -w halstead-metrics && npm run test:unit -w halstead-metrics-core && npm run test:unit -w halstead-metrics-desktop && npm run test:unit -w halstead-metrics-tui",
+        "test:integration": "npm run test:integration -w halstead-metrics && npm run test:integration -w halstead-metrics-core && npm run test:integration -w halstead-metrics-desktop && npm run test:integration -w halstead-metrics-tui",
         "test": "npm run test:unit && npm run test:integration",
         "start": "npm start -w halstead-metrics-desktop",
-        "cli": "node packages/halstead-metrics-cli/index.js"
+        "tui": "npm start -w halstead-metrics-tui",
+        "cli": "node packages/halstead-metrics-core/index.js"
     },
     "engines": {
         "node": ">=18"

@@ -8,13 +8,60 @@
         "start": "electron .",
         "test:unit": "node --test test/unit/*.js",
         "test:integration": "node --test test/integration/*.js",
-        "test": "npm run test:unit && npm run test:integration"
+        "test": "npm run test:unit && npm run test:integration",
+        "dist": "electron-builder",
+        "dist:linux": "electron-builder --linux --x64",
+        "dist:mac": "electron-builder --mac --universal",
+        "dist:win": "electron-builder --win --x64"
+    },
+    "build": {
+        "appId": "com.halsteadmetrics.desktop",
+        "productName": "Halstead Metrics",
+        "npmRebuild": false,
+        "artifactName": "halstead-metrics-${version}-${os}-${arch}.${ext}",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "main.js",
+            "preload.js",
+            "renderer.js",
+            "index.html",
+            "styles.css",
+            "lib/**/*",
+            "package.json"
+        ],
+        "asarUnpack": [
+            "**/node_modules/pdfkit/**/*"
+        ],
+        "linux": {
+            "target": [
+                "AppImage",
+                "deb"
+            ],
+            "category": "Development"
+        },
+        "mac": {
+            "identity": null,
+            "category": "public.app-category.developer-tools",
+            "target": [
+                "dmg",
+                "zip"
+            ]
+        },
+        "win": {
+            "target": [
+                "nsis",
+                "zip"
+            ]
+        }
     },
     "dependencies": {
         "halstead-metrics": "1.0.0"
     },
     "devDependencies": {
         "electron": "^45.2.3",
+        "electron-builder": "^26.18.0",
         "jsdom": "^26.1.0"
     },
     "author": {

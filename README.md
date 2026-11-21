@@ -7,8 +7,9 @@ Halstead software-science metrics for the programming languages in wide use toda
 | Package | Role |
 | --- | --- |
 | `packages/halstead-metrics` | Core library. Tokenizes source, classifies operators and operands, and renders the HTML and PDF reports. |
-| `packages/halstead-metrics-cli` | `halstead <path>` prints the JSON report to stdout. |
+| `packages/halstead-metrics-core` | `halstead <path>` prints the JSON report to stdout. |
 | `packages/halstead-metrics-desktop` | Desktop application. Browse files, read the metrics, and open an HTML or PDF report. |
+| `packages/halstead-metrics-tui` | Terminal application. The same browser, measures, source view, and HTML or PDF reports, drawn with Ink. |
 
 ## Desktop application
 
@@ -21,6 +22,16 @@ The window has two panes.
 
 - **Files**, on the left, is the folder you are browsing. **Up** moves to the parent directory. Folders and files have icons, supported source files show an extension chip, and the current path truncates instead of covering the list. **File → Open File...** jumps the tree to a supported source file. **File → Exit** quits.
 - **Measures** shows the file name and the calculated values: length, vocabulary, volume, difficulty, estimated length, purity ratio, effort, and time. **Source** shows the file with keywords, strings, comments, and numbers highlighted. **HTML report** and **PDF report** write `Name.html` or `Name.pdf` next to the source file and open it. The stem is everything before the first dot.
+
+A file that is not a supported language still opens in the source pane. Its metrics stay empty.
+
+## Terminal application
+
+```bash
+npm run tui
+```
+
+The screen has the same two panes as the desktop app. **Files** is on the left. **Measures** and **Source** are on the right. Arrow keys move through the tree, Enter opens a file or expands a folder, and `u` moves to the parent directory. `o` asks for a path. `h` and `p` write the HTML and PDF reports next to the source file. `[` and `]` scroll the source. `q` quits.
 
 A file that is not a supported language still opens in the source pane. Its metrics stay empty.
 
@@ -50,10 +61,10 @@ Markup and data files (HTML, CSS, JSON, YAML, XML, Markdown) are not scored. `.m
 
 ```bash
 npm run cli -- examples/Sample.java
-node packages/halstead-metrics-cli/index.js examples/hello.c
+node packages/halstead-metrics-core/index.js examples/hello.c
 ```
 
-With `packages/halstead-metrics-cli` installed, the `halstead` command does the same thing:
+With `packages/halstead-metrics-core` installed, the `halstead` command does the same thing:
 
 ```bash
 halstead <path>

@@ -22,5 +22,13 @@
         "email": "rharish100193@gmail.com",
         "url": "https://github.com/rharish100193"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/rharish100193/halstead-metrics.git",
+        "directory": "packages/halstead-metrics"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
 }

@@ -1,0 +1,168 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, for example 1.2.0"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Unit and integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+      - name: Unit tests
+        run: npm run test:unit
+      - name: Integration tests
+        run: npm run test:integration
+      - name: Release script tests
+        run: node --test scripts/stage-desktop-release.test.js
+
+  publish-core:
+    name: Publish core npm package
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Resolve release version
+        env:
+          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+        run: bash scripts/resolve-release-version.sh
+      - name: Publish halstead-metrics
+        working-directory: packages/halstead-metrics
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/publish-npm-package.sh"
+
+  publish-cli:
+    name: Publish CLI npm package
+    needs: publish-core
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Resolve release version
+        env:
+          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+        run: bash scripts/resolve-release-version.sh
+      - name: Wait for the published core package
+        run: bash scripts/wait-for-npm.sh "$CORE_PACKAGE@$VERSION"
+      - name: Point the CLI at the published core package
+        working-directory: packages/halstead-metrics-core
+        run: npm pkg set "dependencies.halstead-metrics=${VERSION}"
+      - name: Publish halstead-metrics-core
+        working-directory: packages/halstead-metrics-core
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: bash "${GITHUB_WORKSPACE}/scripts/publish-npm-package.sh"
+      - name: Run the published CLI
+        run: bash scripts/verify-published-cli.sh
+
+  desktop:
+    name: Desktop (${{ matrix.platform }})
+    needs: publish-cli
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            args: --linux --x64
+          - os: macos-latest
+            platform: mac
+            args: --mac --universal
+          - os: windows-latest
+            platform: win
+            args: --win --x64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Resolve release version
+        env:
+          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+        run: bash scripts/resolve-release-version.sh
+      - name: Wait for the published CLI package
+        run: bash scripts/wait-for-npm.sh "$CLI_PACKAGE@$VERSION" "$CORE_PACKAGE@$VERSION"
+      - name: Run the published CLI
+        run: bash scripts/verify-published-cli.sh
+      - name: Stage the desktop app
+        run: node scripts/stage-desktop-release.js stage
+      - name: Install the published core package
+        run: node scripts/install-staged-desktop.js
+      - name: Require the registry copy of the core package
+        run: node scripts/run-in-desktop-stage.js node "${{ github.workspace }}/scripts/assert-published-core.js"
+      - name: Build the desktop installer
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: node scripts/run-in-desktop-stage.js npx electron-builder ${{ matrix.args }} --publish never
+      - name: Collect installers
+        run: node scripts/stage-desktop-release.js collect
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.platform }}
+          path: ${{ runner.temp }}/installers
+          if-no-files-found: error
+
+  github-release:
+    name: Publish GitHub release
+    needs: desktop
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve release version
+        env:
+          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+        run: bash scripts/resolve-release-version.sh
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: desktop-*
+          merge-multiple: true
+          path: release-assets
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/publish-github-release.sh
