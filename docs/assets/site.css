@@ -37,15 +37,10 @@ a { color: #18181b; }
 }
 
 .mark {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 32px;
   height: 32px;
-  border-radius: 10px;
-  background: #18181b;
-  color: #fff;
-  font-weight: 650;
-  letter-spacing: -0.04em;
+  flex: none;
 }
 
 .brand-text { display: flex; flex-direction: column; }
