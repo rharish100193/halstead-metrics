@@ -2,6 +2,8 @@
 
 Halstead software-science metrics for all major programming languages. Every language uses the same classification and the same formulas. A desktop app and a terminal app browse a source file, show the measures, and write an HTML or PDF report that explains what those measures mean.
 
+The help site is published at <https://rharish100193.github.io/halstead-metrics/>.
+
 ## Packages
 
 | Package | Role |
