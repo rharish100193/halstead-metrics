@@ -1,0 +1,66 @@
+name: Unpublish npm packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact version to remove from npm
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unpublish-npm
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    name: Restrict unpublish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Allow only the repository owner on master
+        env:
+          ACTOR: ${{ github.actor }}
+          REF: ${{ github.ref }}
+        run: |
+          if [ "$ACTOR" != "rharish100193" ]; then
+            echo "$ACTOR is not allowed to unpublish packages."
+            exit 1
+          fi
+          if [ "$REF" != "refs/heads/master" ]; then
+            echo "Unpublish can only run from master."
+            exit 1
+          fi
+
+  unpublish:
+    name: Unpublish ${{ inputs.version }}
+    needs: guard
+    if: github.actor == 'rharish100193' && github.ref == 'refs/heads/master'
+    environment: npm-unpublish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Enable npm authentication
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "Add NPM_TOKEN to the npm-unpublish environment. Trusted publishing cannot unpublish."
+            exit 1
+          fi
+          npm install -g npm@11
+          npm whoami
+      - name: Unpublish the requested version
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ inputs.version }}
+        run: node scripts/unpublish-npm-packages.js "$VERSION"
