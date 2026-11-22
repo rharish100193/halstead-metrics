@@ -1,6 +1,6 @@
 {
     "name": "halstead-metrics-tui",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "private": true,
     "description": "Terminal Halstead metrics browser for all major programming languages, with HTML and PDF reports",
     "bin": {
@@ -16,7 +16,7 @@
         "node": ">=22"
     },
     "dependencies": {
-        "halstead-metrics": "1.0.1",
+        "halstead-metrics": "1.1.0",
         "ink": "^8.0.0",
         "react": "^19.3.0"
     },
