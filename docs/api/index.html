@@ -8,8 +8,9 @@
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 </head>
 <body>
+<div id="layout">
   <header class="top">
-    <a class="brand" href="../">Halstead Metrics <span>Help</span></a>
+    <a class="brand" href="../"><span class="mark">H</span><span class="brand-text"><span class="brand-name">Halstead</span><span class="brand-sub">Help</span></span></a>
     <nav>
       <a href="https://github.com/rharish100193/halstead-metrics">Repository</a>
       <a href="https://www.npmjs.com/package/halstead-metrics">npm</a>
@@ -37,8 +38,9 @@ const report = reportSource("int x = 1;", "java", "Sample.java");
 const html = renderHtmlReport(metrics, "Sample.java");
 const pdf = await renderPdfReport(metrics, "Sample.java");</code></pre>
       <p><code>analyzeSource</code> takes the source text and the extension without a dot (<code>java</code>, <code>py</code>, <code>ts</code>, and the rest of the supported set). <code>renderHtmlReport</code> returns a string. <code>renderPdfReport</code> returns a <code>Buffer</code>.</p>
-      <footer>Halstead Metrics is released under the MIT license.</footer>
     </main>
   </div>
+<footer id="footer"><p id="footer-contents">Copyright &copy; Harish Ramasubramanian</p></footer>
+</div>
 </body>
 </html>
