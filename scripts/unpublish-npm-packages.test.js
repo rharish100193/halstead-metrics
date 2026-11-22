@@ -7,10 +7,12 @@ const { specsFor } = require("./unpublish-npm-packages");
 
 test("unpublishes the CLI before the library at one exact version", () => {
 	assert.deepStrictEqual(specsFor("1.2.0"), [
+		"halstead-metrics-tui@1.2.0",
 		"halstead-metrics-core@1.2.0",
 		"halstead-metrics@1.2.0",
 	]);
 	assert.deepStrictEqual(specsFor("0.0.0-stage"), [
+		"halstead-metrics-tui@0.0.0-stage",
 		"halstead-metrics-core@0.0.0-stage",
 		"halstead-metrics@0.0.0-stage",
 	]);

@@ -9,7 +9,7 @@ Halstead software-science metrics for all major programming languages. Every lan
 | `packages/halstead-metrics` | Library for all major programming languages. Tokenizes source, classifies operators and operands, and renders the HTML and PDF reports. |
 | `packages/halstead-metrics-core` | Command-line tool. `halstead <path>` prints the JSON report to stdout. |
 | `packages/halstead-metrics-desktop` | Desktop application for all major programming languages. Browse files, read the metrics, and open an HTML or PDF report. |
-| `packages/halstead-metrics-tui` | Terminal application for all major programming languages. The same browser, measures, source view, and HTML or PDF reports, drawn with Ink. |
+| `packages/halstead-metrics-tui` | Terminal application published as `halstead-metrics-tui`. `halstead-tui` opens the browser, measures, source view, and HTML or PDF reports. |
 
 ## Desktop application
 
@@ -28,8 +28,11 @@ A file that is not a supported language still opens in the source pane. Its metr
 ## Terminal application
 
 ```bash
-npm run tui
+npm install -g halstead-metrics-tui
+halstead-tui
 ```
+
+From this repository, `npm run tui` starts the same program.
 
 The screen has the same two panes as the desktop app. **Files** is on the left. **Measures** and **Source** are on the right. Arrow keys move through the tree, Enter opens a file or expands a folder, and `u` moves to the parent directory. `o` asks for a path. `h` and `p` write the HTML and PDF reports next to the source file. `[` and `]` scroll the source. `q` quits.
 

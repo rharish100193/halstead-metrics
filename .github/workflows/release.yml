@@ -140,6 +140,42 @@ jobs:
       - name: Run the published CLI
         run: bash scripts/verify-published-cli.sh
 
+  publish-tui:
+    name: Publish TUI npm package
+    needs: [publish-core, bump]
+    if: always() && needs.publish-core.result == 'success' && (needs.bump.result == 'success' || needs.bump.result == 'skipped')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump.outputs.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Resolve release version
+        run: bash scripts/resolve-release-version.sh
+      - name: Enable GitHub trusted publishing
+        run: |
+          npm install -g npm@11
+          npm config delete "//registry.npmjs.org/:_authToken" || true
+          npm config delete always-auth || true
+          npm --version
+      - name: Wait for the published library
+        run: bash scripts/wait-for-npm.sh "$CORE_PACKAGE@$VERSION"
+      - name: Point the TUI at the published library
+        working-directory: packages/halstead-metrics-tui
+        run: npm pkg set "dependencies.halstead-metrics=${VERSION}"
+      - name: Publish halstead-metrics-tui
+        working-directory: packages/halstead-metrics-tui
+        run: bash "${GITHUB_WORKSPACE}/scripts/publish-npm-package.sh"
+      - name: Install the published TUI
+        run: bash scripts/verify-published-tui.sh
+
   desktop:
     name: Desktop (${{ matrix.platform }})
     needs: [publish-cli, bump]
@@ -196,8 +232,8 @@ jobs:
 
   github-release:
     name: Publish GitHub release
-    needs: [desktop, bump]
-    if: always() && needs.desktop.result == 'success' && (needs.bump.result == 'success' || needs.bump.result == 'skipped')
+    needs: [desktop, publish-tui, bump]
+    if: always() && needs.desktop.result == 'success' && needs.publish-tui.result == 'success' && (needs.bump.result == 'success' || needs.bump.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: write

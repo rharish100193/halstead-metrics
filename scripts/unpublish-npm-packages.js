@@ -2,7 +2,7 @@
 
 const { spawnSync } = require("child_process");
 
-const PACKAGES = ["halstead-metrics-core", "halstead-metrics"];
+const PACKAGES = ["halstead-metrics-tui", "halstead-metrics-core", "halstead-metrics"];
 const VERSION_PATTERN = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/;
 
 /**

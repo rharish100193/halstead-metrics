@@ -41,24 +41,25 @@ function bumpVersion(version, level) {
  * published before and then removed. Removed versions stay in `time` and
  * `npm view name@version` returns 404 for them.
  * @param {string} version
- * @param {{ versions?: Record<string, unknown>, time?: Record<string, string> } | null} library
- * @param {{ versions?: Record<string, unknown>, time?: Record<string, string> } | null} core
+ * @param {...({ versions?: Record<string, unknown>, time?: Record<string, string> } | null)} packuments
  * @returns {boolean}
  */
-function shouldBump(version, library, core) {
+function shouldBump(version, ...packuments) {
 	const recorded = (packument) => Boolean(
 		packument && ((packument.time && packument.time[version]) || (packument.versions && packument.versions[version]))
 	);
 	const installable = (packument) => Boolean(packument && packument.versions && packument.versions[version]);
-	const libraryRecorded = recorded(library);
-	const coreRecorded = recorded(core);
-	if (!libraryRecorded && !coreRecorded) {
+	const states = packuments.map((packument) => ({
+		recorded: recorded(packument),
+		installable: installable(packument),
+	}));
+	if (states.every((state) => !state.recorded)) {
 		return false;
 	}
-	if (installable(library) && installable(core)) {
+	if (states.every((state) => state.installable)) {
 		return true;
 	}
-	return (libraryRecorded && !installable(library)) || (coreRecorded && !installable(core));
+	return states.some((state) => state.recorded && !state.installable);
 }
 
 /**
@@ -98,11 +99,13 @@ function main() {
 	const level = process.argv[2] || "patch";
 	const library = JSON.parse(fs.readFileSync("packages/halstead-metrics/package.json", "utf8"));
 	const core = JSON.parse(fs.readFileSync("packages/halstead-metrics-core/package.json", "utf8"));
+	const tui = JSON.parse(fs.readFileSync("packages/halstead-metrics-tui/package.json", "utf8"));
 	const current = library.version;
 	const next = shouldBump(
 		current,
 		fetchPackument(library.name),
 		fetchPackument(core.name),
+		fetchPackument(tui.name),
 	) ? bumpVersion(current, level) : current;
 	if (next !== current) {
 		for (const path of PACKAGE_PATHS) {
