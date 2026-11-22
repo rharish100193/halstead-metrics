@@ -145,6 +145,9 @@ jobs:
     needs: [publish-cli, bump]
     if: always() && needs.publish-cli.result == 'success' && (needs.bump.result == 'success' || needs.bump.result == 'skipped')
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     timeout-minutes: 45
     strategy:
       fail-fast: false
