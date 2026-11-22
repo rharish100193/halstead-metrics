@@ -23,10 +23,13 @@ cat > "$notes" <<EOF
 - [\`${TUI_PACKAGE}@${VERSION}\`](https://www.npmjs.com/package/${TUI_PACKAGE}/v/${VERSION})
 
 Desktop installers for Linux, macOS, and Windows are built from the published \`${CORE_PACKAGE}@${VERSION}\` package. The desktop jobs start only after \`${CLI_PACKAGE}@${VERSION}\` is on the registry and \`halstead\` runs against that release.
+
+The terminal UI is \`${TUI_PACKAGE}@${VERSION}\`. Install it with \`npm install -g ${TUI_PACKAGE}\` and run \`halstead-tui\`.
 EOF
 
 if gh release view "$tag" >/dev/null 2>&1; then
   gh release upload "$tag" "${assets[@]}" --clobber
+  gh release edit "$tag" --notes-file "$notes"
 else
   gh release create "$tag" "${assets[@]}" --target "$GITHUB_SHA" --title "$tag" --notes-file "$notes"
 fi
