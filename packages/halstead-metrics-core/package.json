@@ -1,6 +1,6 @@
 {
     "name": "halstead-metrics-core",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "description": "Command-line Halstead metrics for all major programming languages",
     "bin": {
         "halstead": "index.js"
@@ -20,7 +20,7 @@
         "node": ">=18"
     },
     "dependencies": {
-        "halstead-metrics": "1.2.0"
+        "halstead-metrics": "1.3.0"
     },
     "author": {
         "name": "Harish Ramasubramanian",
