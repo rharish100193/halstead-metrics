@@ -1,6 +1,6 @@
 {
     "name": "halstead-metrics",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "Halstead metrics for all major programming languages",
     "main": "src/index.js",
     "files": [
