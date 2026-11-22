@@ -9,7 +9,7 @@ Halstead software-science metrics for all major programming languages. Every lan
 | `packages/halstead-metrics` | Library for all major programming languages. Tokenizes source, classifies operators and operands, and renders the HTML and PDF reports. |
 | `packages/halstead-metrics-core` | Command-line tool. `halstead <path>` prints the JSON report to stdout. |
 | `packages/halstead-metrics-desktop` | Desktop application for all major programming languages. Browse files, read the metrics, and open an HTML or PDF report. |
-| `packages/halstead-metrics-tui` | Terminal application published as `halstead-metrics-tui`. `halstead-tui` opens the browser, measures, source view, and HTML or PDF reports. |
+| `packages/halstead-metrics-tui` | Terminal application for all major programming languages, published as `halstead-metrics-tui`. `halstead-tui` browses a folder, shows the measures and highlighted source, and writes an HTML or PDF report. |
 
 ## Desktop application
 
