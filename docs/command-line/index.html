@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Command line · Halstead Metrics</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="../">Halstead Metrics <span>Help</span></a>
+    <nav>
+      <a href="https://github.com/rharish100193/halstead-metrics">Repository</a>
+      <a href="https://www.npmjs.com/package/halstead-metrics">npm</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <aside class="side">
+      <p>Guide</p>
+      <a href="../">Overview</a>
+<a href="../command-line/" aria-current="page">Command line</a>
+<a href="../terminal/">Terminal UI</a>
+<a href="../desktop/">Desktop</a>
+<a href="../reports/">Reports</a>
+<a href="../languages/">Languages</a>
+<a href="../api/">API</a>
+    </aside>
+    <main>
+      <h1>Command line</h1>
+      <p><code>halstead-metrics-core</code> prints one JSON report for a source file. It needs Node 18 or newer.</p>
+      <pre><code>npm install -g halstead-metrics-core
+halstead path/to/File.java</code></pre>
+      <p>From a checkout of this repository:</p>
+      <pre><code>npm run cli -- examples/Sample.java
+node packages/halstead-metrics-core/index.js examples/hello.c</code></pre>
+      <h2>Exit codes</h2>
+      <table>
+        <thead><tr><th>Code</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>No arguments, <code>-h</code>, <code>--help</code>, or <code>-help</code>. Usage is printed.</td></tr>
+          <tr><td>2</td><td>The path cannot be read.</td></tr>
+          <tr><td>3</td><td>The file extension is not a supported language.</td></tr>
+        </tbody>
+      </table>
+      <h2>Stdout</h2>
+      <p>Stdout is one JSON object. Counts inside <code>_Operands</code> and <code>_Operators</code> are strings. <code>filename</code> is the path you passed in.</p>
+      <pre><code>{
+  "Halstead": {
+    "n1": 3,
+    "n2": 2,
+    "N1": 3,
+    "N2": 2,
+    "Vocabulary": 5,
+    "Length": 5,
+    "Estimated program length": 6.75,
+    "Volume": 11.61,
+    "Difficulty": 1.5,
+    "Effort": 17.41,
+    "Programming time": 0.97,
+    "Purity ratio": 1.35,
+    "_Operands": { "x": "1", "1": "1" },
+    "_Operators": { "int": "1", ";": "1", "=": "1" }
+  },
+  "filename": "Sample.java"
+}</code></pre>
+      <h2>Formulas</h2>
+      <table>
+        <thead><tr><th>Field</th><th>Formula</th></tr></thead>
+        <tbody>
+          <tr><td>n1, N1</td><td>Distinct and total operators</td></tr>
+          <tr><td>n2, N2</td><td>Distinct and total operands</td></tr>
+          <tr><td>Vocabulary</td><td>n1 + n2</td></tr>
+          <tr><td>Length</td><td>N1 + N2</td></tr>
+          <tr><td>Estimated program length</td><td>n1 log2(n1) + n2 log2(n2)</td></tr>
+          <tr><td>Purity ratio</td><td>estimated length / length</td></tr>
+          <tr><td>Volume</td><td>length × log2(vocabulary)</td></tr>
+          <tr><td>Difficulty</td><td>(n1 / 2) × (N2 / n2)</td></tr>
+          <tr><td>Effort</td><td>volume × difficulty</td></tr>
+          <tr><td>Programming time</td><td>effort / 18</td></tr>
+        </tbody>
+      </table>
+      <footer>Halstead Metrics is released under the MIT license.</footer>
+    </main>
+  </div>
+</body>
+</html>

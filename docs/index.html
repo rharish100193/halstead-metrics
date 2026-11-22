@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Overview · Halstead Metrics</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="./">Halstead Metrics <span>Help</span></a>
+    <nav>
+      <a href="https://github.com/rharish100193/halstead-metrics">Repository</a>
+      <a href="https://www.npmjs.com/package/halstead-metrics">npm</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <aside class="side">
+      <p>Guide</p>
+      <a href="./" aria-current="page">Overview</a>
+<a href="command-line/">Command line</a>
+<a href="terminal/">Terminal UI</a>
+<a href="desktop/">Desktop</a>
+<a href="reports/">Reports</a>
+<a href="languages/">Languages</a>
+<a href="api/">API</a>
+    </aside>
+    <main>
+      <h1>Halstead Metrics</h1>
+      <p class="lead">Halstead software-science metrics for all major programming languages. Every language uses the same classification and the same formulas.</p>
+      <p>A desktop app and a terminal app browse a source file, show the measures, and write an HTML or PDF report that explains what those measures mean.</p>
+      <h2>Packages</h2>
+      <table>
+        <thead><tr><th>Package</th><th>What it is</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://www.npmjs.com/package/halstead-metrics"><code>halstead-metrics</code></a></td><td>Library. Tokenizes source, classifies operators and operands, and renders the HTML and PDF reports.</td></tr>
+          <tr><td><a href="https://www.npmjs.com/package/halstead-metrics-core"><code>halstead-metrics-core</code></a></td><td>Command-line tool. <code>halstead &lt;path&gt;</code> prints the JSON report to stdout.</td></tr>
+          <tr><td><a href="terminal/"><code>halstead-metrics-tui</code></a></td><td>Terminal UI. <code>halstead-tui</code> browses a folder, shows the measures and highlighted source, and writes an HTML or PDF report. Requires Node 22 or newer.</td></tr>
+          <tr><td><a href="desktop/">Desktop</a></td><td>Desktop application. Browse files, read the metrics, and open an HTML or PDF report. It is built from this repository and is not an npm package.</td></tr>
+        </tbody>
+      </table>
+      <h2>Start here</h2>
+      <pre><code>npm install -g halstead-metrics-core
+halstead path/to/File.java
+
+npm install -g halstead-metrics-tui
+halstead-tui</code></pre>
+      <p>Read the <a href="command-line/">command line</a>, <a href="terminal/">terminal UI</a>, <a href="desktop/">desktop</a>, <a href="reports/">reports</a>, <a href="languages/">languages</a>, and <a href="api/">API</a> pages for the details.</p>
+      <footer>Halstead Metrics is released under the MIT license.</footer>
+    </main>
+  </div>
+</body>
+</html>

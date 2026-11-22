@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API · Halstead Metrics</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="../">Halstead Metrics <span>Help</span></a>
+    <nav>
+      <a href="https://github.com/rharish100193/halstead-metrics">Repository</a>
+      <a href="https://www.npmjs.com/package/halstead-metrics">npm</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <aside class="side">
+      <p>Guide</p>
+      <a href="../">Overview</a>
+<a href="../command-line/">Command line</a>
+<a href="../terminal/">Terminal UI</a>
+<a href="../desktop/">Desktop</a>
+<a href="../reports/">Reports</a>
+<a href="../languages/">Languages</a>
+<a href="../api/" aria-current="page">API</a>
+    </aside>
+    <main>
+      <h1>API</h1>
+      <p>Install the library with Node 18 or newer:</p>
+      <pre><code>npm install halstead-metrics</code></pre>
+      <pre><code>const { analyzeSource, reportSource, renderHtmlReport, renderPdfReport } = require("halstead-metrics");
+
+const metrics = analyzeSource("int x = 1;", "java");
+const report = reportSource("int x = 1;", "java", "Sample.java");
+const html = renderHtmlReport(metrics, "Sample.java");
+const pdf = await renderPdfReport(metrics, "Sample.java");</code></pre>
+      <p><code>analyzeSource</code> takes the source text and the extension without a dot (<code>java</code>, <code>py</code>, <code>ts</code>, and the rest of the supported set). <code>renderHtmlReport</code> returns a string. <code>renderPdfReport</code> returns a <code>Buffer</code>.</p>
+      <footer>Halstead Metrics is released under the MIT license.</footer>
+    </main>
+  </div>
+</body>
+</html>

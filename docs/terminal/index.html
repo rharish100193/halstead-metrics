@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Terminal UI · Halstead Metrics</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="../">Halstead Metrics <span>Help</span></a>
+    <nav>
+      <a href="https://github.com/rharish100193/halstead-metrics">Repository</a>
+      <a href="https://www.npmjs.com/package/halstead-metrics">npm</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <aside class="side">
+      <p>Guide</p>
+      <a href="../">Overview</a>
+<a href="../command-line/">Command line</a>
+<a href="../terminal/" aria-current="page">Terminal UI</a>
+<a href="../desktop/">Desktop</a>
+<a href="../reports/">Reports</a>
+<a href="../languages/">Languages</a>
+<a href="../api/">API</a>
+    </aside>
+    <main>
+      <h1>Terminal UI</h1>
+      <p><code>halstead-tui</code> browses a folder, shows the measures and highlighted source, and writes an HTML or PDF report. It needs Node 22 or newer.</p>
+      <pre><code>npm install -g halstead-metrics-tui
+halstead-tui</code></pre>
+      <p>From a checkout of this repository, <code>npm run tui</code> starts the same program.</p>
+      <p>The screen has the same two panes as the desktop app. <strong>Files</strong> is on the left. <strong>Measures</strong> and <strong>Source</strong> are on the right.</p>
+      <table>
+        <thead><tr><th>Key</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Arrow keys</td><td>Move through the tree</td></tr>
+          <tr><td><kbd>Enter</kbd></td><td>Open a file or expand a folder</td></tr>
+          <tr><td><kbd>u</kbd></td><td>Move to the parent directory</td></tr>
+          <tr><td><kbd>o</kbd></td><td>Ask for a path</td></tr>
+          <tr><td><kbd>h</kbd></td><td>Write the HTML report next to the source file</td></tr>
+          <tr><td><kbd>p</kbd></td><td>Write the PDF report next to the source file</td></tr>
+          <tr><td><kbd>[</kbd> <kbd>]</kbd></td><td>Scroll the source</td></tr>
+          <tr><td><kbd>q</kbd></td><td>Quit</td></tr>
+        </tbody>
+      </table>
+      <p>A file that is not a supported language still opens in the source pane. Its metrics stay empty.</p>
+      <footer>Halstead Metrics is released under the MIT license.</footer>
+    </main>
+  </div>
+</body>
+</html>

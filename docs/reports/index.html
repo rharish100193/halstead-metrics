@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reports · Halstead Metrics</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="../">Halstead Metrics <span>Help</span></a>
+    <nav>
+      <a href="https://github.com/rharish100193/halstead-metrics">Repository</a>
+      <a href="https://www.npmjs.com/package/halstead-metrics">npm</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <aside class="side">
+      <p>Guide</p>
+      <a href="../">Overview</a>
+<a href="../command-line/">Command line</a>
+<a href="../terminal/">Terminal UI</a>
+<a href="../desktop/">Desktop</a>
+<a href="../reports/" aria-current="page">Reports</a>
+<a href="../languages/">Languages</a>
+<a href="../api/">API</a>
+    </aside>
+    <main>
+      <h1>Reports</h1>
+      <p>The HTML and PDF reports use the same layout: a white card, the Halstead mark, a file panel, summary cards, and bordered tables.</p>
+      <table>
+        <thead><tr><th>Section</th><th>What it tells you</th></tr></thead>
+        <tbody>
+          <tr><td>Summary</td><td>Length, vocabulary, volume, difficulty, effort, and time for this file.</td></tr>
+          <tr><td>About Halstead metrics</td><td>What operators and operands are, and what the measures do not describe.</td></tr>
+          <tr><td>Reading this file</td><td>How to read this file's purity ratio, volume, difficulty, and programming time.</td></tr>
+          <tr><td>Formulas</td><td>Each measure and the expression that produces it.</td></tr>
+          <tr><td>Operators and operands</td><td>Every counted token and how many times it appears.</td></tr>
+          <tr><td>Measured values</td><td>The full set of rounded results.</td></tr>
+          <tr><td>How to use this report</td><td>This is one file. A larger number is not a pass or fail.</td></tr>
+        </tbody>
+      </table>
+      <p>Counts are the classified totals. Metric values use half-even rounding to two decimal places. Whole numbers are shown with one decimal place (<code>5.0</code>). Programming time is effort divided by 18 and is a comparison figure, not a clock of how long the file took to write.</p>
+      <h2>What counts as an operator</h2>
+      <p>Every language uses the same rules.</p>
+      <ul>
+        <li>Language keywords are operators, including C++ keywords in <code>.cc</code> and <code>.c++</code>.</li>
+        <li>Operators include <code>+</code> <code>++</code> <code>-</code> <code>--</code> <code>*</code> <code>.</code> <code>;</code> <code>,</code> <code>/</code> <code>%</code> <code>!</code> <code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>==</code> <code>!=</code> <code>=</code> <code>:</code> <code>&amp;&amp;</code> <code>||</code> <code>&lt;&lt;</code> <code>&gt;&gt;</code> <code>::</code> <code>-&gt;</code> <code>=&gt;</code> and the other symbols in the shared operator list.</li>
+        <li>When a brace pair is balanced, <code>{ }</code>, <code>( )</code>, <code>[ ]</code>, or <code>&lt; &gt;</code> is an extra operator. The individual <code>(</code> <code>)</code> <code>{</code> <code>}</code> <code>[</code> <code>]</code> tokens are still operands.</li>
+        <li>String literals stay one operand, including Python prefixes and quotes. Identifiers, numbers, and any other remaining token are operands.</li>
+        <li>Whitespace and comments are skipped. A <code>#</code> line at the start of a line is skipped in C and C++.</li>
+      </ul>
+      <footer>Halstead Metrics is released under the MIT license.</footer>
+    </main>
+  </div>
+</body>
+</html>

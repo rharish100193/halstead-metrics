@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Desktop · Halstead Metrics</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="../">Halstead Metrics <span>Help</span></a>
+    <nav>
+      <a href="https://github.com/rharish100193/halstead-metrics">Repository</a>
+      <a href="https://www.npmjs.com/package/halstead-metrics">npm</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <aside class="side">
+      <p>Guide</p>
+      <a href="../">Overview</a>
+<a href="../command-line/">Command line</a>
+<a href="../terminal/">Terminal UI</a>
+<a href="../desktop/" aria-current="page">Desktop</a>
+<a href="../reports/">Reports</a>
+<a href="../languages/">Languages</a>
+<a href="../api/">API</a>
+    </aside>
+    <main>
+      <h1>Desktop</h1>
+      <p>The desktop application is part of this repository. It is not published to npm. Release builds for Linux, macOS, and Windows are attached to the <a href="https://github.com/rharish100193/halstead-metrics/releases">GitHub release</a>.</p>
+      <p>To run it from a checkout:</p>
+      <pre><code>npm install
+npm start</code></pre>
+      <p>The window has two panes.</p>
+      <ul>
+        <li><strong>Files</strong>, on the left, is the folder you are browsing. <strong>Up</strong> moves to the parent directory. Folders and files have icons, supported source files show an extension chip, and the current path truncates instead of covering the list. <strong>File → Open File...</strong> jumps the tree to a supported source file. <strong>File → Exit</strong> quits.</li>
+        <li><strong>Measures</strong> shows the file name and the calculated values: length, vocabulary, volume, difficulty, estimated length, purity ratio, effort, and time. <strong>Source</strong> shows the file with keywords, strings, comments, and numbers highlighted. <strong>HTML report</strong> and <strong>PDF report</strong> write <code>Name.html</code> or <code>Name.pdf</code> next to the source file and open it. The stem is everything before the first dot.</li>
+      </ul>
+      <p>A file that is not a supported language still opens in the source pane. Its metrics stay empty.</p>
+      <footer>Halstead Metrics is released under the MIT license.</footer>
+    </main>
+  </div>
+</body>
+</html>

@@ -111,6 +111,7 @@ dist
 !packages/halstead-metrics-tui/lib/**
 *.html
 !packages/halstead-metrics-desktop/index.html
+!docs/**/*.html
 .docz
 ./node_modules/*
 documentation
