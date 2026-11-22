@@ -3,6 +3,7 @@
     "version": "1.2.0",
     "private": true,
     "description": "Desktop Halstead metrics browser for all major programming languages, with HTML and PDF reports",
+    "homepage": "https://github.com/rharish100193/halstead-metrics",
     "main": "main.js",
     "scripts": {
         "start": "electron .",

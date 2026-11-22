@@ -20,6 +20,7 @@ test("stage pins the desktop app to the published core version", () => {
 	assert.equal(manifest.version, "9.9.9");
 	assert.equal(manifest.dependencies["halstead-metrics"], "9.9.9");
 	assert.equal(manifest.private, true);
+	assert.equal(manifest.homepage, "https://github.com/rharish100193/halstead-metrics");
 	assert.equal(fs.existsSync(path.join(stage, "lib", "files.js")), true);
 	assert.equal(fs.existsSync(path.join(stage, "test")), false);
 	fs.rmSync(runnerTemp, { recursive: true, force: true });
